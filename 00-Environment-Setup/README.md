@@ -64,7 +64,7 @@ This confirms that the Azure Free Account was successfully activated.
 
 ### Screenshot
 
-![Azure Free Account — Initial Portal](./screenshots/01-azure-free-account.png)
+![Azure Free Account — Initial Portal](./01-azure-free-account.png)
 
 ---
 
