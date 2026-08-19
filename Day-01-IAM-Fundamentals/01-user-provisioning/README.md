@@ -375,7 +375,7 @@ Screenshots will be captured during the lab to demonstrate the implementation an
 
 **Filename:**
 
-`screenshots/01-create-peter-parker.png`
+![Peter Parker User Provisioning](./screenshots/01-create-peter-parker.png)
 
 Purpose:
 
