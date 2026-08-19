@@ -106,44 +106,62 @@ This architecture will grow as the journey progresses.
 
 ---
 
-## 5. Microsoft Entra ID
+## 5. Configure the OsCorp Entra Tenant
 
-Microsoft Entra ID is the identity platform that will form the foundation of the OsCorp cloud identity environment.
+The Azure environment automatically created a Microsoft Entra tenant for the laboratory.
 
-A Microsoft Entra tenant represents an organisation and provides a dedicated identity environment containing its users, groups, applications and other identity objects.
+I configured the tenant display name to **OsCorp**, which will represent the fictional organisation used throughout this IAM journey.
 
-The Azure account created above provides the starting point for the OsCorp identity environment.
+The tenant will serve as the identity foundation for the OsCorp environment.
 
-### Initial objectives
+### Current Tenant Configuration
 
-The first stage of the laboratory will be to create:
+- **Organisation:** OsCorp
+- **Identity Platform:** Microsoft Entra ID
+- **Tenant Type:** Workforce
+- **Environment:** Learning / Lab
+- **Primary Use:** IAM experimentation and hands-on learning
 
-* OsCorp users
-* Security groups
-* Department structure
-* Test identities
-* Group memberships
-* Authentication scenarios
-* Authorization scenarios
+### Screenshot
 
-Later stages will introduce:
-
-* Enterprise applications
-* App registrations
-* Service principals
-* RBAC
-* Conditional Access
-* MFA
-* Privileged Identity Management
-* Identity Governance
-* Managed identities
-* Hybrid Active Directory
-* Microsoft Graph
-* IAM automation
+![OsCorp Microsoft Entra Tenant](./02-oscorp-entra-tenant.png)
 
 ---
 
-## 6. Cost Management Strategy
+## 6. Microsoft Entra ID
+
+Microsoft Entra ID is the identity platform that will form the foundation of the OsCorp cloud identity environment.
+
+A Microsoft Entra tenant provides a dedicated identity boundary containing users, groups, applications and other identity objects.
+
+The first stage of the laboratory will be to create:
+
+- OsCorp users
+- Security groups
+- Department structure
+- Test identities
+- Group memberships
+- Authentication scenarios
+- Authorization scenarios
+
+Later stages will introduce:
+
+- Enterprise applications
+- App registrations
+- Service principals
+- RBAC
+- Conditional Access
+- MFA
+- Privileged Identity Management
+- Identity Governance
+- Managed identities
+- Hybrid Active Directory
+- Microsoft Graph
+- IAM automation
+
+---
+
+## 7. Cost Management Strategy
 
 The Azure credit will be treated as a limited laboratory budget.
 
@@ -161,7 +179,7 @@ Microsoft provides free service allowances in addition to the Azure credit, so n
 
 ---
 
-## 7. Lab Safety
+## 8. Lab Safety
 
 This environment is intended for experimentation.
 
