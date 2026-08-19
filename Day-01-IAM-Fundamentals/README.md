@@ -128,18 +128,18 @@ The environment will progressively evolve from a basic identity directory into a
 
 The lab will eventually include:
 
-Users
-Security groups
-Applications
-Service identities
-Access policies
-Roles
-Privileged identities
-Authentication controls
-Identity governance
-Hybrid identity
-Automation
-IAM troubleshooting scenarios
+- Users
+- Security groups
+- Applications
+- Service identities
+- Access policies
+- Roles
+- Privileged identities
+- Authentication controls
+- Identity governance
+- Hybrid identity
+- Automation
+- IAM troubleshooting scenarios
 
 ## Fictional Lab Identities
 
