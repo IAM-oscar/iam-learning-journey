@@ -2,9 +2,13 @@
 
 ## Overview
 
-Today marks the beginning of my IAM learning journey.
+Today marks the beginning of my Identity and Access Management (IAM) learning journey.
 
-The goal of this journey is to build a practical understanding of Identity and Access Management, moving from fundamental concepts into hands-on labs, troubleshooting scenarios, automation, and real-world identity security use cases.
+The goal of this journey is to build a practical understanding of IAM, moving from fundamental concepts into hands-on labs, troubleshooting scenarios, automation, and real-world identity security use cases.
+
+The practical work will be performed in a fictional organisation called **OsCorp**, using Microsoft Entra ID and, later in the journey, additional Microsoft and identity technologies.
+
+---
 
 ## What I Learned
 
@@ -16,21 +20,36 @@ The first question IAM needs to answer is:
 
 **Who or what is requesting access?**
 
+Examples of identities include:
+
+- Human users
+- Applications
+- Service accounts
+- Devices
+- Workloads
+- Service principals
+- Managed identities
+
+---
+
 ### 2. Authentication
 
 Authentication verifies the identity making the request.
 
 Common authentication methods include:
 
-* Passwords
-* Multi-factor authentication (MFA)
-* Certificates
-* Biometrics
-* Security keys
+- Passwords
+- Multi-factor authentication (MFA)
+- Certificates
+- Biometrics
+- Security keys
+- Passwordless authentication
 
 The key question is:
 
 **Who are you?**
+
+---
 
 ### 3. Authorization
 
@@ -40,19 +59,39 @@ The key question is:
 
 **What are you allowed to do?**
 
+Authorization decisions can be based on factors such as:
+
+- User identity
+- Group membership
+- Roles
+- Resource permissions
+- Policies
+- Device state
+- Location
+- Risk
+
+---
+
 ### 4. Access Control
 
 Access control is how authorization decisions are enforced.
 
-Common mechanisms include:
+Common access-control mechanisms include:
 
-* Roles
-* Groups
-* Permissions
-* Policies
-* Least privilege
+- Roles
+- Groups
+- Permissions
+- Policies
+- Conditional Access
+- Least privilege
+
+The objective is to provide the access required to perform a task without unnecessarily increasing the identity's privileges.
+
+---
 
 ## The IAM Flow
+
+A simplified IAM flow can be represented as:
 
 ```text
 Identity
