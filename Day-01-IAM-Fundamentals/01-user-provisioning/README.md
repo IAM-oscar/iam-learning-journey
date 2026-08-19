@@ -387,7 +387,7 @@ Demonstrate the user provisioning configuration before creation.
 
 **Filename:**
 
-`screenshots/02-oscorp-users.png`
+![OsCorp Users](./screenshots/02-oscorp-users.png)
 
 Purpose:
 
