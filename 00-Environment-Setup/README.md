@@ -210,7 +210,7 @@ should be removed or redacted when appropriate.
 
 ---
 
-# Environment Status
+## 9. Environment Status
 
 | Component                   | Status      |
 | --------------------------- | ----------- |
@@ -225,7 +225,7 @@ should be removed or redacted when appropriate.
 
 ---
 
-# Next Step
+## 10. Next Step
 
 ## Day 1 — IAM Fundamentals
 
