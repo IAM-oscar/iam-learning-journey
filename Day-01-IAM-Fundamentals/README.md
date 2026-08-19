@@ -80,17 +80,15 @@ Applications, services, devices, and other non-human identities also require ide
 
 ## What's Next?
 
-The next stage of the journey will move into:
+Day 2 — Authentication Fundamentals
 
-* Active Directory fundamentals
-* Domains and Domain Controllers
-* Organizational Units
-* Groups and permissions
-* Group Policy
-* DNS and Active Directory
-* Kerberos
-* LDAP
-* Microsoft Entra ID
+Authentication vs authorization
+Password authentication
+MFA
+Passwordless authentication
+Authentication factors
+Identity providers
+Authentication protocols
 
 ## Visual Notes
 
