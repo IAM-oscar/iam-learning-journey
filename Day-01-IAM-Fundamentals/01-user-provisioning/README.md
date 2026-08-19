@@ -447,3 +447,77 @@ Save the change
 Revalidate the identity
              ↓
 Review audit logs
+
+
+**Expected Outcome**
+
+Peter Parker's department should be:
+
+Engineering
+
+The correction should be visible in the user's attributes and should generate an appropriate audit event.
+
+This provides an initial example of an IAM operational task involving:
+
+Investigation
+Validation
+Remediation
+Auditability
+
+## 13. Lessons Learned
+
+This section will be completed after the lab has been performed.
+
+Key areas to reflect on:
+
+What was involved in provisioning an identity?
+Why are naming standards important?
+Which user attributes can influence identity management?
+Why should account creation and access assignment be treated as separate activities?
+How can audit logs support IAM operations?
+What could go wrong during user provisioning?
+How would the process differ in a larger enterprise environment?
+Which parts of the process could be automated?
+
+**14. Lab Outcome**
+
+The lab will be considered complete when:
+
+ Peter Parker has been successfully provisioned.
+ Tony Stark has been successfully provisioned.
+ Natasha Romanoff has been successfully provisioned.
+ Steve Rogers has been successfully provisioned.
+ Naming standards have been followed.
+ User attributes have been validated.
+ Accounts are enabled.
+ No unnecessary administrative roles have been assigned.
+ Provisioning activity has been verified through audit logs.
+ Required screenshots have been captured.
+ Troubleshooting scenario has been completed.
+ Lessons learned have been documented.
+
+**15. Final Result**
+
+Once completed, this lab will demonstrate the basic identity provisioning lifecycle:
+
+Provision
+    ↓
+Configure
+    ↓
+Validate
+    ↓
+Audit
+    ↓
+Troubleshoot
+    ↓
+Remediate
+    ↓
+Document
+
+This establishes the foundation for the next IAM lab:
+
+Group-Based Access Control
+
+**Related Documentation**
+Day 01 — IAM Fundamentals
+OsCorp Environment Setup
