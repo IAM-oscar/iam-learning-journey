@@ -108,6 +108,7 @@ Resource
 A useful way to remember it:
 
 **Identify → Verify → Authorize → Control → Access**
+---
 
 ## Key Takeaway
 
@@ -179,10 +180,10 @@ Where:
 
 Examples:
 
-SG-Finance-Users
-SG-IT-Users
-SG-HR-Users
-SG-Sales-Users
+- `SG-Finance-Users`
+- `SG-IT-Users`
+- `SG-HR-Users`
+- `SG-Sales-Users`
 
 The SG prefix is a naming convention used by this laboratory. It does not represent an Entra group type, scope, or permission level.
 
@@ -271,6 +272,17 @@ Authentication protocols
 
 ---
 
-**Day 01 complete. 🔐**
+**Day 01 Status. 🔐**
+
+| Area                   | Status         |
+| ---------------------- | -------------- |
+| IAM fundamentals       | ✅ Complete     |
+| OsCorp lab environment | ✅ Established  |
+| Naming standards       | ✅ Defined      |
+| Visual notes           | ✅ Complete     |
+| User provisioning lab  | 🔄 In progress |
+| Group-based access lab | ⏳ Planned      |
+| Authentication lab     | ⏳ Planned      |
+
 
 Next: Authentication fundamentals
