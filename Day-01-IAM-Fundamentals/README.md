@@ -100,4 +100,4 @@ The next stage of the journey will move into:
 
 **Day 01 complete. 🔐**
 
-This repository will document the progression from IAM fundamentals to practical labs and identity security projects.
+Next: Authentication fundamentals
