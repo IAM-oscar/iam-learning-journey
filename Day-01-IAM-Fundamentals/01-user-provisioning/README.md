@@ -363,7 +363,7 @@ The audit evidence should demonstrate:
 
 The relevant audit-log screenshot will be added to:
 
-`screenshots/04-user-provisioning-audit-log.png`
+![audit-log](./screenshots/04-audit-log.png)
 
 ---
 
@@ -399,7 +399,7 @@ Demonstrate that the four fictional identities were successfully provisioned.
 
 **Filename:**
 
-`screenshots/03-peter-parker-attributes.png`
+![User Attributes](./screenshots/03-peter-parker-attributes.png)
 
 Purpose:
 
@@ -411,7 +411,7 @@ Demonstrate validation of identity attributes such as department, job title, UPN
 
 **Filename:**
 
-`screenshots/04-user-provisioning-audit-log.png`
+![User audit-logs](./screenshots/04-user-provisioning-audit-log.png)
 
 Purpose:
 
@@ -448,12 +448,13 @@ Revalidate the identity
              ↓
 Review audit logs
 
+```
 
 **Expected Outcome**
 
 Peter Parker's department should be:
 
-Engineering
+`Engineering`
 
 The correction should be visible in the user's attributes and should generate an appropriate audit event.
 
