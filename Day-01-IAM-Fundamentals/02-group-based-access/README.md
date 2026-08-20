@@ -527,7 +527,6 @@ Screenshots captured during the lab will demonstrate the implementation, validat
 
 ### Screenshot 05 — Application Registration
 
-**Filename:** `05-access-gramted.png`
 ![App registration](./screenshots/05-App_registration.png)
 
 **Purpose:** Demonstrate the creation of the OsCorp Engineering Portal application registration in Microsoft Entra ID.
