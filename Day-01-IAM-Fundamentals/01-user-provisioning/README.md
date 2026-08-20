@@ -2,7 +2,7 @@
 
 ## Lab Status
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Platform:** Microsoft Entra ID
 
@@ -522,5 +522,5 @@ This establishes the foundation for the next IAM lab:
 Group-Based Access Control
 
 **Related Documentation**
-- Day 01 — IAM Fundamentals
-- OsCorp Environment Setup
+- [Day 01 — IAM Fundamentals](../README.md)
+- [OsCorp Environment Setup](../../00-Environment-Setup/README.md)
