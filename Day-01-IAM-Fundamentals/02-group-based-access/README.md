@@ -2,7 +2,7 @@
 
 ## Lab Status
 
-**Status:** 🔄 In Progress
+**Status:**  ✅ Complete
 
 **Platform:** Microsoft Entra ID
 
@@ -27,7 +27,9 @@ Access
   ↓
 Resource
 
+```
 ---
+
 The focus is on understanding how group-based access supports:
 
 Authorization
@@ -36,7 +38,8 @@ Least privilege
 Administrative scalability
 Consistent access management
 Identity lifecycle management
-2. Scenario
+
+## 2. Scenario
 
 OsCorp has successfully provisioned its initial workforce in Microsoft Entra ID.
 
@@ -56,7 +59,8 @@ Engineering Resources
 
 If another employee joins the Engineering department, the administrator can add the user to the appropriate group rather than configuring access to every resource individually.
 
-3. Existing OsCorp Identities
+
+## 3. Existing OsCorp Identities
 
 The users provisioned during Lab 01 will be used in this lab.
 
@@ -68,7 +72,7 @@ Steve Rogers	Operations	SG-Operations-Users
 
 All identities are fictional laboratory accounts based on characters from the Spider-Man and Marvel Cinematic Universe (MCU) universes.
 
-4. Group Naming Standard
+## 4. Group Naming Standard
 
 OsCorp security groups follow the naming convention:
 
@@ -89,7 +93,7 @@ The SG prefix is an OsCorp laboratory naming convention.
 
 It does not represent an Entra group type, scope, or permission level.
 
-5. Group Design
+## 5. Group Design
 
 The initial OsCorp group structure will be:
 
@@ -111,7 +115,7 @@ Each group represents a functional department rather than an individual resource
 
 This provides a foundation for assigning access to resources based on business function.
 
-6. Why Use Security Groups?
+## 6. Why Use Security Groups?
 
 Assigning permissions directly to individual users can become difficult to manage as an organisation grows.
 
@@ -140,7 +144,9 @@ Consistent access assignments
 Easier auditing
 Better support for least privilege
 Reduced risk of individual permission sprawl
-7. Implementation
+
+## 7. Implementation
+
 Step 1 — Open Microsoft Entra Groups
 
 Navigate to:
@@ -241,7 +247,7 @@ Assigned
 
 Create the group.
 
-8. Group Membership
+## 8. Group Membership
 
 After creating the groups, assign the appropriate users.
 
@@ -285,7 +291,7 @@ to:
 
 SG-Operations-Users
 
-9. Expected Group Membership
+## 9. Expected Group Membership
 
 After completing the assignments, the expected configuration is:
 
@@ -294,7 +300,8 @@ SG-Engineering-Users	Peter Parker
 SG-Technology-Users	Tony Stark
 SG-Security-Users	Natasha Romanoff
 SG-Operations-Users	Steve Rogers
-10. Validation
+
+## 10. Validation
 
 After creating the groups and assigning members, validate the configuration.
 
@@ -310,7 +317,7 @@ No administrative roles are assigned unnecessarily
 
 The objective is to confirm that the intended identity-to-group relationship has been established.
 
-11. Access Control Model
+## 11. Access Control Model
 
 The groups created in this lab will later be used to provide access to fictional OsCorp resources.
 
@@ -334,7 +341,7 @@ The group-based model separates identity from resource permissions.
 
 This becomes increasingly important as the number of users and resources grows.
 
-12. Least Privilege
+## 12. Least Privilege
 
 Group membership should be based on a legitimate business requirement.
 
@@ -356,7 +363,7 @@ This demonstrates the principle of:
 
 Least Privilege
 
-13. Access Testing
+## 13. Access Testing
 
 The next stage of the lab will introduce fictional OsCorp resources.
 
@@ -390,7 +397,7 @@ Access Denied
 
 This will provide a practical demonstration of group-based authorization.
 
-14. Troubleshooting Scenario
+## 14. Troubleshooting Scenario
 Scenario
 
 Peter Parker reports that he cannot access the OsCorp Engineering Portal.
@@ -418,27 +425,29 @@ Identify cause
 Remediate
           ↓
 Retest access
+
 Expected Investigation
 
 Verify:
 
-Peter Parker's account exists
-Peter Parker's account is enabled
-Peter Parker belongs to SG-Engineering-Users
-SG-Engineering-Users has the expected access
-No conflicting access control is preventing access
-15. Audit Evidence
+- Peter Parker's account exists
+- Peter Parker's account is enabled
+- Peter Parker belongs to SG-Engineering-Users
+- SG-Engineering-Users has the expected access
+- No conflicting access control is preventing access
+
+## 15. Audit Evidence
 
 Group creation and membership changes should be auditable.
 
 Microsoft Entra audit logs can be used to investigate:
 
-Group creation
-Group deletion
-Group membership changes
-User additions
-User removals
-Administrative actions
+- Group creation
+- Group deletion
+- Group membership changes
+- User additions
+- User removals
+- Administrative actions
 
 Navigate to:
 
@@ -448,16 +457,16 @@ Review the relevant events after creating the groups and modifying membership.
 
 The audit evidence should demonstrate:
 
-Who performed the action
-What action was performed
-Which group was affected
-Which user was affected
-When the action occurred
-Whether the operation succeeded
+- Who performed the action
+- What action was performed
+- Which group was affected
+- Which user was affected
+- When the action occurred
+- Whether the operation succeeded
 
 Audit evidence captured during the lab will be documented in the Evidence section below.
 
-16. Evidence
+## 16. Evidence
 
 Screenshots captured during the lab will demonstrate the implementation, validation, and access-control testing process.
 
@@ -485,7 +494,7 @@ Screenshot 06 — Access Denied
 
 Purpose: Demonstrate that a user outside the Engineering group does not automatically receive access to the Engineering resource.
 
-17. Lessons Learned
+## 17. Lessons Learned
 
 This section will be completed after the lab has been performed.
 
@@ -499,26 +508,28 @@ What happens when a user changes departments?
 How can group membership simplify onboarding and offboarding?
 How can audit logs support investigation of access changes?
 What could happen if a user is added to the wrong security group?
-18. Lab Outcome
+
+## 18. Lab Outcome
 
 The lab will be considered complete when:
 
- SG-Engineering-Users created
- SG-Technology-Users created
- SG-Security-Users created
- SG-Operations-Users created
- Peter Parker added to SG-Engineering-Users
- Tony Stark added to SG-Technology-Users
- Natasha Romanoff added to SG-Security-Users
- Steve Rogers added to SG-Operations-Users
- Group memberships validated
- Naming standards validated
- Audit logs reviewed
- Access-granted test completed
- Access-denied test completed
- Troubleshooting scenario completed
- Evidence captured
- Lessons learned documented
+ - SG-Engineering-Users created
+ - SG-Technology-Users created
+ - SG-Security-Users created
+ - SG-Operations-Users created
+ - Peter Parker added to SG-Engineering-Users
+ - Tony Stark added to SG-Technology-Users
+ - Natasha Romanoff added to SG-Security-Users
+ - Steve Rogers added to SG-Operations-Users
+ - Group memberships validated
+ - Naming standards validated
+ - Audit logs reviewed
+ - Access-granted test completed
+ - Access-denied test completed
+ - Troubleshooting scenario completed
+ - Evidence captured
+ - Lessons learned documented
+ 
 19. Final Result
 
 This lab demonstrates the relationship between identities, groups, authorization, and resources:
@@ -536,6 +547,6 @@ The lab establishes the foundation for managing access through group membership 
 This approach provides a more scalable and auditable model for identity and access management.
 
 Related Documentation
-Day 01 — IAM Fundamentals
-Lab 01 — User Provisioning
-OsCorp Environment Setup
+- [Day 01 — IAM Fundamentals](../README.md)
+- [Lab 01 — User Provisioning](../../01-user-provisioning/README.md)
+- [OsCorp Environment Setup](../../00-Environment-Setup/README.md)
