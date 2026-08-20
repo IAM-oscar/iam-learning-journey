@@ -477,7 +477,7 @@ Screenshots captured during the lab will demonstrate the implementation, validat
 
 ### Screenshot 01 — Group Creation
 
-**Filename:** `01-security-groups.png`
+![security-groups](./screenshots/01-security-groups.png)
 
 **Purpose:** Demonstrate creation of the OsCorp security groups using the defined naming standard.
 
@@ -485,7 +485,7 @@ Screenshots captured during the lab will demonstrate the implementation, validat
 
 ### Screenshot 02 — Engineering Group Membership
 
-**Filename:** `02-engineering-group-membership.png`
+![Eng-groups](./screenshots/02-engineering-group-membership.png)
 
 **Purpose:** Demonstrate Peter Parker's membership in `SG-Engineering-Users`.
 
@@ -493,7 +493,7 @@ Screenshots captured during the lab will demonstrate the implementation, validat
 
 ### Screenshot 03 — All Group Memberships
 
-**Filename:** `03-oscorp-group-membership.png`
+![OsCorp-groups](./screenshots/03-oscorp-group-membership.png)
 
 **Purpose:** Demonstrate the expected relationship between OsCorp users and departmental security groups.
 
@@ -501,7 +501,7 @@ Screenshots captured during the lab will demonstrate the implementation, validat
 
 ### Screenshot 04 — Group Audit Log
 
-**Filename:** `04-group-audit-log.png`
+![Group-Audit-log](./screenshots/04-group-audit-log.png)
 
 **Purpose:** Demonstrate that group creation and/or membership changes were recorded in Microsoft Entra audit logs.
 
@@ -509,7 +509,7 @@ Screenshots captured during the lab will demonstrate the implementation, validat
 
 ### Screenshot 05 — Access Granted
 
-**Filename:** `05-access-granted.png`
+**Filename:** `05-access-gramted.png`
 
 **Purpose:** Demonstrate that Peter Parker can access the fictional OsCorp Engineering resource through group-based authorization.
 
