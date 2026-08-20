@@ -108,17 +108,18 @@ The objective is to reduce the risk of continued access after the user's employm
 
 The lifecycle scenario will use the fictional OsCorp identity:
 
-Peter Parker
+**Peter Parker**
 
 Initial state:
 
-|Attribute|	Value|
-|User|	Peter Parker|
-|Department|	Engineering|
-|Security Group|	SG-Engineering-Users|
-|Account Status|	Enabled|
+| Attribute | Value |
+|---|---|
+| User | Peter Parker |
+| Department | Engineering |
+| Security Group | `SG-Engineering-Users` |
+| Account Status | Enabled |
 
-Peter Parker will then progress through the lifecycle scenarios.
+Peter Parker will then progress through the lifecycle scenarios
 
 ## 5. Joiner Scenario
 
@@ -266,33 +267,37 @@ Engineering
 SG-Engineering-Users
 ```
 
-Phase 2 — Mover
+### Phase 2 — Mover
 
-Update Peter Parker's department from:
+Peter Parker changes departments from Engineering to Technology.
 
-Engineering
+The IAM administrator must update the user's identity attributes and adjust group membership to reflect the new role.
 
-to:
+| Change | Previous State | New State |
+|---|---|---|
+| Department | Engineering | Technology |
+| Security Group | `SG-Engineering-Users` | `SG-Technology-Users` |
+| Engineering Access | Present | Removed |
+| Technology Access | Not Present | Added |
 
-Technology
+After making the changes, save the updated configuration and validate the user's new state.
 
-Remove:
 
-SG-Engineering-Users
+### Phase 3 — Leaver
 
-Add:
+Peter Parker leaves OsCorp.
 
-SG-Technology-Users
+The IAM administrator must disable the user's account and review the identity's remaining access.
 
-Save the changes.
+| Action | Expected Result |
+|---|---|
+| Account status | Disabled |
+| Authentication | Disabled |
+| Group memberships | Reviewed |
+| Unnecessary access | Removed |
+| Audit activity | Reviewed |
 
-Phase 3 — Leaver
-
-After completing the Mover validation, disable Peter Parker's account.
-
-Navigate to Peter Parker's user account and change the account status to disabled.
-
-Save the change.
+The objective is to prevent the former employee from continuing to authenticate while maintaining an auditable record of the account lifecycle change.
 
 ## 10. Validation
 
