@@ -343,7 +343,7 @@ The objective is to avoid granting access simply because an identity has been cr
 
 ## 10. Audit Evidence
 
-Microsoft Entra audit logs will be used to verify that the provisioning activities were recorded.
+Microsoft Entra audit logs are used to verify that the provisioning activities were recorded.
 
 Navigate to:
 
@@ -359,63 +359,41 @@ The audit evidence should demonstrate:
 - When the action occurred
 - Whether the operation succeeded
 
-### Evidence
-
-The relevant audit-log screenshot will be added to:
-
-![audit-log](./screenshots/04-audit-log.png)
-
 ---
 
 ## 11. Evidence
 
-Screenshots will be captured during the lab to demonstrate the implementation and validation process.
+Screenshots captured during the lab demonstrate the implementation and validation process.
 
 ### Screenshot 01 — User Creation
 
-**Filename:**
+**Purpose:** Demonstrate the user provisioning workflow from opening the New User interface through to configuring Peter Parker's identity.
 
 ![Peter Parker User Provisioning](./screenshots/01-create-peter-parker.png)
-
-Purpose:
-
-Demonstrate the user provisioning configuration before creation.
 
 ---
 
 ### Screenshot 02 — OsCorp Users
 
-**Filename:**
+**Purpose:** Demonstrate that the four fictional OsCorp identities were successfully provisioned.
 
 ![OsCorp Users](./screenshots/02-oscorp-users.png)
-
-Purpose:
-
-Demonstrate that the four fictional identities were successfully provisioned.
 
 ---
 
 ### Screenshot 03 — User Attributes
 
-**Filename:**
+**Purpose:** Demonstrate validation of user attributes including department, job title, User Principal Name (UPN), and account status.
 
-![User Attributes](./screenshots/03-peter-parker-attributes.png)
-
-Purpose:
-
-Demonstrate validation of identity attributes such as department, job title, UPN, and account status.
+![Peter Parker User Attributes](./screenshots/03-peter-parker-attributes.png)
 
 ---
 
 ### Screenshot 04 — Audit Log
 
-**Filename:**
+**Purpose:** Demonstrate that the user provisioning activity was recorded in Microsoft Entra audit logs.
 
-![User audit-logs](./screenshots/04-user-provisioning-audit-log.png)
-
-Purpose:
-
-Demonstrate that the provisioning activity was recorded in Microsoft Entra audit logs.
+![User Provisioning Audit Log](./screenshots/04-audit-log.png)
 
 ---
 
@@ -460,10 +438,10 @@ The correction should be visible in the user's attributes and should generate an
 
 This provides an initial example of an IAM operational task involving:
 
-Investigation
-Validation
-Remediation
-Auditability
+- Investigation
+- Validation
+- Remediation
+- Auditability
 
 ## 13. Lessons Learned
 
@@ -471,36 +449,37 @@ This section will be completed after the lab has been performed.
 
 Key areas to reflect on:
 
-What was involved in provisioning an identity?
-Why are naming standards important?
-Which user attributes can influence identity management?
-Why should account creation and access assignment be treated as separate activities?
-How can audit logs support IAM operations?
-What could go wrong during user provisioning?
-How would the process differ in a larger enterprise environment?
-Which parts of the process could be automated?
+- What was involved in provisioning an identity?
+- Why are naming standards important?
+- Which user attributes can influence identity management?
+- Why should account creation and access assignment be treated as separate activities?
+- How can audit logs support IAM operations?
+- What could go wrong during user provisioning?
+- How would the process differ in a larger enterprise environment?
+- Which parts of the process could be automated?
 
 **14. Lab Outcome**
 
 The lab will be considered complete when:
 
- Peter Parker has been successfully provisioned.
- Tony Stark has been successfully provisioned.
- Natasha Romanoff has been successfully provisioned.
- Steve Rogers has been successfully provisioned.
- Naming standards have been followed.
- User attributes have been validated.
- Accounts are enabled.
- No unnecessary administrative roles have been assigned.
- Provisioning activity has been verified through audit logs.
- Required screenshots have been captured.
- Troubleshooting scenario has been completed.
- Lessons learned have been documented.
+ - Peter Parker has been successfully provisioned.
+ - Tony Stark has been successfully provisioned.
+ - Natasha Romanoff has been successfully provisioned.
+ - Steve Rogers has been successfully provisioned.
+ - Naming standards have been followed.
+ - User attributes have been validated.
+ - Accounts are enabled.
+ - No unnecessary administrative roles have been assigned.
+ - Provisioning activity has been verified through audit logs.
+ - Required screenshots have been captured.
+ - Troubleshooting scenario has been completed.
+ - Lessons learned have been documented.
 
 **15. Final Result**
 
 Once completed, this lab will demonstrate the basic identity provisioning lifecycle:
 
+```text
 Provision
     ↓
 Configure
@@ -514,11 +493,12 @@ Troubleshoot
 Remediate
     ↓
 Document
+```
 
 This establishes the foundation for the next IAM lab:
 
 Group-Based Access Control
 
 **Related Documentation**
-Day 01 — IAM Fundamentals
-OsCorp Environment Setup
+- Day 01 — IAM Fundamentals
+- OsCorp Environment Setup
