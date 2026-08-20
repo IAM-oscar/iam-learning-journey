@@ -321,7 +321,38 @@ For each group, verify:
 
 The objective is to confirm that the intended identity-to-group relationship has been established.
 
-## 11. Access Control Model
+## 11. Application Registration
+
+To demonstrate application-level authorization, an internal OsCorp application was registered in Microsoft Entra ID.
+
+### Application Details
+
+| Setting | Value |
+|---|---|
+| Application Name | `OsCorp Engineering Portal` |
+| Application Type | Single tenant |
+| Identity Provider | Microsoft Entra ID |
+| Purpose | Demonstrate group-based application authorization |
+
+The application registration establishes the trust relationship between the OsCorp Engineering Portal and Microsoft Entra ID.
+
+The application will be used later in the lab to demonstrate how an authenticated identity's group membership can influence authorization decisions.
+
+### Implementation
+
+The application was registered through:
+
+**Microsoft Entra ID → App registrations → New registration**
+
+The application was configured as a single-tenant application because the portal represents an internal OsCorp resource.
+
+### Evidence
+
+![OsCorp Engineering Portal App Registration](./screenshots/01-app-registration.png)
+
+**Purpose:** Demonstrate the creation and initial configuration of the OsCorp Engineering Portal application registration.
+
+## 12. Access Control Model
 
 The groups created in this lab will later be used to provide access to fictional OsCorp resources.
 
@@ -346,7 +377,7 @@ The group-based model separates identity from resource permissions.
 
 This becomes increasingly important as the number of users and resources grows.
 
-## 12. Least Privilege
+## 13. Least Privilege
 
 Group membership should be based on a legitimate business requirement.
 
@@ -368,70 +399,57 @@ This demonstrates the principle of:
 
 **Least Privilege**
 
-## 13. Access Testing
+## 14. Authorization Model
 
-The next stage of the lab will introduce fictional OsCorp resources.
+The departmental security groups created in this lab provide the foundation for group-based authorization.
 
-An example resource will be:
+For example:
 
-`OsCorp Engineering Portal`
-
-Access will be evaluated using group membership.
-
-**Expected behaviour:**
 ```text
 Peter Parker
       ↓
 SG-Engineering-Users
       ↓
-OsCorp Engineering Portal
-      ↓
-Access Granted
-```
-A user outside the Engineering group should not automatically receive access.
+Engineering Resources
 
-For example:
-```text
-Tony Stark
-      ↓
-SG-Technology-Users
-      ↓
-OsCorp Engineering Portal
-      ↓
-Access Denied
 ```
-This will provide a practical demonstration of group-based authorization.
+The group membership establishes the identity-to-access relationship that can later be consumed by applications and protected resources.
 
-## 14. Troubleshooting Scenario
+At this stage, the lab focuses on establishing and validating the group-based access model rather than deploying a production application.
+
+Application-level authorization using the OsCorp Engineering Portal will be covered in a later authentication and application security lab.
+
+## 15. Troubleshooting Scenario
 **Scenario**
 
-Peter Parker reports that he cannot access the OsCorp Engineering Portal.
+Peter Parker reports that he cannot access an Engineering resource.
 
 The IAM administrator must determine whether the issue is related to group membership.
 
 **Investigation**
-```text
+
 The troubleshooting process should follow:
 
-User reports access denied
+```text
+User reports access issue
           ↓
 Confirm user identity
+          ↓
+Check account status
           ↓
 Check group membership
           ↓
 Confirm SG-Engineering-Users membership
           ↓
-Check resource access assignment
-          ↓
-Review relevant logs
+Review relevant audit logs
           ↓
 Identify cause
           ↓
 Remediate
           ↓
-Retest access
+Retest
 ```
-**Expected Investigation**
+**Investigation Checks**
 
 Verify:
 
@@ -441,7 +459,7 @@ Verify:
 - SG-Engineering-Users has the expected access
 - No conflicting access control is preventing access
 
-## 15. Audit Evidence
+## 16. Audit Evidence
 
 Group creation and membership changes should be auditable.
 
@@ -471,7 +489,7 @@ The audit evidence should demonstrate:
 
 Audit evidence captured during the lab will be documented in the Evidence section below.
 
-## 16. Evidence
+## 17. Evidence
 
 Screenshots captured during the lab will demonstrate the implementation, validation, and access-control testing process.
 
@@ -507,36 +525,30 @@ Screenshots captured during the lab will demonstrate the implementation, validat
 
 ---
 
-### Screenshot 05 — Access Granted
+### Screenshot 05 — Application Registration
 
 **Filename:** `05-access-gramted.png`
+![App registration](./screenshots/05-App_registration.png)
 
-**Purpose:** Demonstrate that Peter Parker can access the fictional OsCorp Engineering resource through group-based authorization.
+**Purpose:** Demonstrate the creation of the OsCorp Engineering Portal application registration in Microsoft Entra ID.
 
 ---
 
-### Screenshot 06 — Access Denied
-
-**Filename:** `06-access-denied.png`
-
-**Purpose:** Demonstrate that a user outside the Engineering group does not automatically receive access to the Engineering resource.
-
-## 17. Lessons Learned
+## 18. Lessons Learned
 
 This section will be completed after the lab has been performed.
 
 Key areas to reflect on:
 
-- Why are security groups useful for access management?
-- What are the advantages of group-based access over direct user permissions?
-- How does group membership contribute to authorization?
-- How does group-based access support least privilege?
-- What happens when a user changes departments?
-- How can group membership simplify onboarding and offboarding?
-- How can audit logs support investigation of access changes?
-- What could happen if a user is added to the wrong security group?
+- Security groups provide a central way to manage users according to business function.
+- Group-based access reduces the need to manage permissions individually for every user.
+- Group membership can be used as an input into authorization decisions.
+- Least privilege should be considered when assigning users to groups.
+- Consistent naming conventions make identity environments easier to administer and audit.
+- Microsoft Entra audit logs provide useful evidence when investigating identity and group-management activity.
+- Application-level authorization is a separate layer from group creation and membership management.
 
-## 18. Lab Outcome
+## 19. Lab Outcome
 
 The lab will be considered complete when:
 
@@ -551,13 +563,10 @@ The lab will be considered complete when:
  - Group memberships validated
  - Naming standards validated
  - Audit logs reviewed
- - Access-granted test completed
- - Access-denied test completed
- - Troubleshooting scenario completed
  - Evidence captured
  - Lessons learned documented
  
-## 19. Final Result
+## 20. Final Result
 
 This lab demonstrates the relationship between identities, groups, authorization, and resources:
 ```text
@@ -571,7 +580,9 @@ Resource Access
 ```
 The lab establishes the foundation for managing access through group membership rather than assigning permissions individually to users.
 
-This approach provides a more scalable and auditable model for identity and access management.
+The OsCorp Engineering Portal application registration has also been created as a foundation for the later authentication and application authorization labs.
+
+This approach provides a more scalable and auditable model for Identity and Access Management.
 
 Related Documentation
 - [Day 01 — IAM Fundamentals](../README.md)
