@@ -414,35 +414,35 @@ as the appropriate group for Peter's new department.
 
 Screenshots captured during the lab will demonstrate the identity lifecycle transitions and validation activities.
 
-Screenshot 01 — Joiner State
+### Screenshot 01 — Initial Joiner State
 
-Filename: 01-joiner-state.png
+![Screenshot 01 — Initial Joiner State](./screenshots/01-joiner-state.png)
 
-Purpose: Demonstrate Peter Parker's initial Engineering identity and group membership.
+**Purpose:** Demonstrate Peter Parker's initial Engineering identity, enabled account status, and membership in `SG-Engineering-Users`..
 
-Screenshot 02 — Mover: Department Change
+### Screenshot 02 — Mover: Department Change
 
-Filename: 02-mover-department-change.png
+![Screenshot 02 — Mover: Department Change](./screenshots/02-mover-department-change.png)
 
-Purpose: Demonstrate Peter Parker's department changing from Engineering to Technology.
+**Purpose:** Purpose: Demonstrate Peter Parker's department changing from Engineering to Technology.
 
-Screenshot 03 — Mover: Group Membership
+### Screenshot 03 — Mover: Group Membership
 
-Filename: 03-mover-group-membership.png
+![Screenshot 03 — Mover: Group Membership](./screenshots/03-mover-group-membership.png)
 
-Purpose: Demonstrate removal from SG-Engineering-Users and membership in SG-Technology-Users.
+**Purpose:** Purpose: Demonstrate removal from SG-Engineering-Users and membership in SG-Technology-Users.
 
-Screenshot 04 — Leaver: Account Disabled
+### Screenshot 04 — Leaver: Account Disabled
 
-Filename: 04-leaver-account-disabled.png
+![Screenshot 04 — Leaver: Account Disabled](./screenshots/04-leaver-account-disabled.png)
 
-Purpose: Demonstrate that Peter Parker's account has been disabled as part of the leaver process.
+**Purpose:** Purpose: Demonstrate that Peter Parker's account has been disabled as part of the leaver process.
 
-Screenshot 05 — Lifecycle Audit Evidence
+### Screenshot 05 — Lifecycle Audit Evidence
 
-Filename: 05-lifecycle-audit-log.png
+![Screenshot 05 — Lifecycle Audit Evidence](./screenshots/05-lifecycle-audit-log.png)
 
-Purpose: Demonstrate that identity lifecycle changes were recorded in Microsoft Entra audit logs.
+**Purpose:** Demonstrate that identity attribute, group membership, and account lifecycle changes were recorded in Microsoft Entra audit logs.
 
 ## 14. Lessons Learned
 
