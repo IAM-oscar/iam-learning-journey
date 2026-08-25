@@ -505,7 +505,7 @@ Access should reflect the user's current business requirement throughout the ide
 This lifecycle approach helps reduce unnecessary access, supports least privilege, and provides an auditable process for managing identities.
 
 ## Related Documentation
-[Day 01 — IAM Fundamentals](../README.md)
-[Lab 01 — User Provisioning](../01-user-provisioning/README.md)
-[Lab 02 — Group-Based Access Control](../02-group-based-access/README.md)
-[OsCorp Environment Setup](../../00-Environment-Setup/README.md)
+- [Day 01 — IAM Fundamentals](../README.md)
+- [Lab 01 — User Provisioning](../01-user-provisioning/README.md)
+- [Lab 02 — Group-Based Access Control](../02-group-based-access/README.md)
+- [OsCorp Environment Setup](../../00-Environment-Setup/README.md)
