@@ -145,11 +145,11 @@ Objective
 
 Demonstrate that:
 
-**1.** Peter Parker exists in Microsoft Entra ID.
-**2.** The account is enabled.
-**3.** The identity can authenticate successfully.
-**4.** The authentication event is recorded by Microsoft Entra.
-**5.** The resulting sign-in activity can be investigated.
+1. Peter Parker exists in Microsoft Entra ID.
+2. The account is enabled.
+3. The identity can authenticate successfully.
+4. The authentication event is recorded by Microsoft Entra.
+5. The resulting sign-in activity can be investigated.
 
 ## 8. Implementation
 
