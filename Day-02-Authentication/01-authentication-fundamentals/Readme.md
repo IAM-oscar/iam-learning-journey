@@ -157,12 +157,12 @@ The authentication test will be performed using the existing OsCorp Microsoft En
 
 The administrator will:
 
-**1.** Locate Peter Parker in Microsoft Entra ID.
-**2.** Confirm that the account is enabled.
-**3.** Initiate an authentication attempt.
-**4.** Complete the authentication process.
-**5.** Confirm successful authentication.
-**6.** Review the resulting sign-in activity.
+1. Locate Peter Parker in Microsoft Entra ID.
+2. Confirm that the account is enabled.
+3. Initiate an authentication attempt.
+4. Complete the authentication process.
+5. Confirm successful authentication.
+6. Review the resulting sign-in activity.
 
 ## 9. Validation
 
