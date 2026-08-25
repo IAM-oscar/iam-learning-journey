@@ -233,25 +233,25 @@ Screenshots will be captured during the lab to demonstrate the authentication pr
 
 ## Screenshot 01 — Peter Parker Identity
 
-[Screenshot 01 — Peter Parker Identity](../screenshots/01-peter-parker-identity.png)
+![Screenshot 01 — Peter Parker Identity](./screenshots/01-peter-parker-identity.png)
 
 Purpose: Demonstrate Peter Parker's identity and enabled account status in Microsoft Entra ID.
 
 ## Screenshot 02 — Authentication Result
 
-[Screenshot 02 — Authentication Result](../screenshots/02-authentication-result.png)
+![Screenshot 02 — Authentication Result](./screenshots/02-authentication-result.png)
 
 Purpose: Demonstrate the result of Peter Parker's authentication attempt.
 
 ## Screenshot 03 — Sign-In Log
 
-[Screenshot 03 — Sign-In Log](../screenshots/03-sign-in-log.png)
+![Screenshot 03 — Sign-In Log](./screenshots/03-sign-in-log.png)
 
 Purpose: Demonstrate that Peter Parker's authentication activity was recorded in Microsoft Entra sign-in logs.
 
 ## Screenshot 04 — Authentication Details
 
-[Screenshot 04 — Authentication Details](../screenshots/04-authentication-details.png)
+![Screenshot 04 — Authentication Details](./screenshots/04-authentication-details.png)
 
 Purpose: Demonstrate the authentication details associated with the sign-in event.
 
