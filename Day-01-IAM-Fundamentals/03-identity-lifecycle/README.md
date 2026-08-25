@@ -2,7 +2,7 @@
 
 ## Lab Status
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Platform:** Microsoft Entra ID
 
