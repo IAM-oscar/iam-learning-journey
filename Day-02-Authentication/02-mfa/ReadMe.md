@@ -168,16 +168,15 @@ The actual authentication method and sign-in behaviour will be validated using M
 
 After MFA registration, the authentication configuration should be reviewed.
 
-The following information should be validated where available:
-
-Check	Expected Result
-User exists	Yes
-Account enabled	Yes
-Authentication method registered	Yes
-Authentication method associated with Peter Parker	Yes
-MFA authentication performed	Yes
-Authentication successful	Yes
-Sign-in activity recorded	Yes
+| Check | Expected Result |
+|---|---|
+| User exists | Yes |
+| Account enabled | Yes |
+| Authentication method registered | Yes |
+| Authentication method associated with Peter Parker | Yes |
+| MFA authentication performed | Yes |
+| Authentication successful | Yes |
+| Sign-in activity recorded | Yes |
 
 ## 12. MFA Sign-In Test
 
