@@ -53,10 +53,11 @@ Application / Resource
 
 Authentication factors can be grouped into three common categories:
 
-Factor	Examples
-Something you know	Password, PIN
-Something you have	Authenticator app, security key
-Something you are	Fingerprint, facial recognition
+| Factor | Examples |
+|---|---|
+| Something you know | Password, PIN |
+| Something you have | Authenticator app, security key |
+| Something you are | Fingerprint, facial recognition |
 
 MFA combines multiple authentication factors or authentication methods to increase confidence that the person requesting access is the legitimate identity owner.
 
@@ -74,8 +75,9 @@ The lab will therefore work with the existing security configuration rather than
 
 The primary identity used for the MFA exercise is:
 
-User	Department	Purpose
-Peter Parker	Engineering	MFA registration and authentication testing
+| User | Department | Purpose |
+|---|---|---|
+| Peter Parker | Engineering | MFA registration and authentication testing |
 
 Peter Parker was previously used in Lab 01 to demonstrate a successful authentication.
 
@@ -97,13 +99,13 @@ Authentication methods provide different mechanisms for verifying an identity.
 
 Examples include:
 
-Password
-Microsoft Authenticator
-Passkeys
-FIDO2 security keys
-Certificate-based authentication
-Temporary Access Pass
-Other supported authentication methods
+- Password
+- Microsoft Authenticator
+- Passkeys
+- FIDO2 security keys
+- Certificate-based authentication
+- Temporary Access Pass
+- Other supported authentication methods
 
 The available methods depend on the Microsoft Entra tenant configuration and licensing.
 
@@ -117,12 +119,12 @@ Objective
 
 Demonstrate that:
 
-Peter Parker has an active Microsoft Entra identity.
-MFA is required by the tenant's security baseline.
-Peter Parker can register an authentication method.
-The authentication method is associated with the identity.
-Peter Parker can complete an MFA-protected authentication.
-Microsoft Entra records the authentication activity.
+- Peter Parker has an active Microsoft Entra identity.
+- MFA is required by the tenant's security baseline.
+- Peter Parker can register an authentication method.
+- The authentication method is associated with the identity.
+- Peter Parker can complete an MFA-protected authentication.
+- Microsoft Entra records the authentication activity.
 
 ## 9. Implementation
 
@@ -130,15 +132,15 @@ The administrator will review Peter Parker's authentication configuration.
 
 The process will be:
 
-Locate Peter Parker in Microsoft Entra ID.
-Open the user's authentication methods.
-Review the currently registered authentication methods.
-Identify the method used for MFA.
-Complete MFA registration if required.
-Authenticate as Peter Parker.
-Complete the MFA challenge.
-Confirm successful authentication.
-Review the resulting sign-in activity.
+- Locate Peter Parker in Microsoft Entra ID.
+- Open the user's authentication methods.
+- Review the currently registered authentication methods.
+- Identify the method used for MFA.
+- Complete MFA registration if required.
+- Authenticate as Peter Parker.
+- Complete the MFA challenge.
+- Confirm successful authentication.
+- Review the resulting sign-in activity.
 
 ## 10. MFA Authentication Flow
 
@@ -183,7 +185,7 @@ After MFA registration, the authentication configuration should be reviewed.
 Peter Parker will be used to perform an MFA-protected authentication.
 
 The test will demonstrate:
-
+```text
 Password Authentication
         ↓
 MFA Challenge
@@ -191,7 +193,7 @@ MFA Challenge
 MFA Verification
         ↓
 Successful Authentication
-
+```
 The successful authentication should result in an authenticated Microsoft session.
 
 The authentication result will then be correlated with Microsoft Entra sign-in logs.
@@ -206,17 +208,17 @@ Microsoft Entra ID → Monitoring & health → Sign-in logs
 
 The sign-in event should be investigated for:
 
-User
-Date and time
-Application
-Authentication requirement
-Authentication method
-Authentication result
-IP address
-Location
-Authentication details
-Additional authentication information
-Failure reason, if applicable
+- User
+- Date and time
+- Application
+- Authentication requirement
+- Authentication method
+- Authentication result
+- IP address
+- Location
+- Authentication details
+- Additional authentication information
+- Failure reason, if applicable
 
 The objective is to understand what Microsoft Entra actually recorded rather than relying only on the user's experience during sign-in.
 
@@ -297,30 +299,35 @@ Screenshots captured during the lab will demonstrate MFA configuration, authenti
 Screenshot 01 — Peter Parker Authentication Methods
 
 Filename: 01-peter-parker-auth-methods.png
+![Peter Parker Authentication Methods](./screenshots/01-peter-parker-auth-methods.png)
 
 Purpose: Demonstrate the authentication methods currently associated with Peter Parker.
 
 Screenshot 02 — MFA Registration
 
 Filename: 02-mfa-registration.png
+![MFA Registration](./screenshots/02-mfa-registration.png)
 
 Purpose: Demonstrate the MFA registration or authentication-method configuration process for Peter Parker.
 
 Screenshot 03 — MFA Authentication Result
 
 Filename: 03-mfa-authentication-result.png
+![MFA Authentication Result](./screenshots/03-mfa-authentication-result.png)
 
 Purpose: Demonstrate that Peter Parker successfully completed an MFA-protected authentication.
 
 Screenshot 04 — MFA Sign-In Log
 
 Filename: 04-mfa-sign-in-log.png
+![MFA Sign-In Log](./screenshots/04-mfa-sign-in-log.png)
 
 Purpose: Demonstrate that the MFA-related authentication activity was recorded in Microsoft Entra sign-in logs.
 
 Screenshot 05 — MFA Authentication Details
 
 Filename: 05-mfa-authentication-details.png
+![MFA Authentication Details](./screenshots/05-mfa-authentication-details.png)
 
 Purpose: Demonstrate the authentication details recorded by Microsoft Entra for the MFA-related sign-in.
 
