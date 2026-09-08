@@ -33,7 +33,7 @@ validate the result with evidence**.
   Azure subscription                Azure subscription 1
   Azure PowerShell module           Az 16.3.0
   PowerShell                        PowerShell 7.6.5
-  Authentication account            `oscorp.iam.lab@outlook.com`
+  Authentication account            `oscorp.iam.labs`
   Entra tenant                      OsCorp
   Security baseline                 Security Defaults enabled
   Azure PowerShell authentication   Interactive/WAM
@@ -266,7 +266,7 @@ The failed event established the following:
 
   Investigation item           Observed result
   ---------------------------- ----------------------------------------------
-  User                         `oscorp.iam.lab@outlook.com`
+  User                         `oscorp.iam.labs`
   Application                  Microsoft Azure PowerShell
   Event time                   `2026-09-08T02:00:17Z`
   Status                       Failure
@@ -349,10 +349,10 @@ The result showed:
 Tenant: 90115781-3bed-422c-9334-062b88e95a24
 
 SubscriptionName : Azure subscription 1
-SubscriptionId   : 5708da48-5936-4699-98d3-db1431fa882a
-Account          : oscorp.iam.lab@outlook.com
+SubscriptionId   : 5----------------------------a
+Account          : oscorp.iam.labs
 Environment      : AzureCloud
-Tenant           : 90115781-3bed-422c-9334-062b88e95a24
+Tenant           : 5----------------------------a
 ```
 
 The subscription was also independently validated with:
@@ -365,8 +365,8 @@ The observed state was:
 
 ``` text
 Name              : Azure subscription 1
-Id                : 5708da48-5936-4699-98d3-db1431fa882a
-TenantId          : 90115781-3bed-422c-9334-062b88e95a24
+Id                : 5----------------------------a
+TenantId          : 5----------------------------a
 State             : Enabled
 ```
 
@@ -443,7 +443,7 @@ The investigation produced the following evidence-based comparison:
   ----------------------- ------------------------------ ------------------------------
   Application             Microsoft Azure PowerShell     Microsoft Azure PowerShell
 
-  User                    `oscorp.iam.lab@outlook.com`   `oscorp.iam.lab@outlook.com`
+  User                    `oscorp.iam.labs`   `oscorp.iam.labs`
 
   Result                  Failure                        Success
 
