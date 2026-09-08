@@ -1,536 +1,824 @@
-# Lab 03 — Authentication Troubleshooting & Sign-In Investigation
+# Lab 03 --- Authentication Troubleshooting & Sign-In Investigation
 
 ## Objective
 
-Investigate Azure and Microsoft Entra authentication behaviour using modern Azure PowerShell and the Microsoft Entra admin center.
+This lab investigates an authentication failure in Microsoft Entra ID
+and demonstrates an evidence-based troubleshooting process.
 
-This lab focuses on:
+The investigation covers:
 
-- Establishing a modern Azure PowerShell environment
-- Authenticating to the OsCorp/Oslabs Azure environment
-- Understanding authentication context
-- Investigating Microsoft Entra sign-in activity
-- Understanding successful and interrupted authentication events
-- Investigating authentication details
-- Understanding token-based authentication behaviour
-- Applying the principle of least privilege during troubleshooting
+-   Azure PowerShell authentication
+-   Microsoft Entra sign-in logs
+-   Device Code authentication
+-   Security Defaults
+-   Error `AADSTS530035`
+-   Web Account Manager (WAM) authentication
+-   Azure subscription context validation
+-   Authentication and authorization boundaries
+-   Least-privilege security considerations
 
----
+The goal is not simply to make authentication work. The goal is to
+determine **why an authentication attempt failed, identify the security
+control responsible, apply the least disruptive remediation, and
+validate the result with evidence**.
+
+------------------------------------------------------------------------
 
 ## Environment
 
-| Component | Configuration |
-|---|---|
-| Organization | OsCorp |
-| Identity Platform | Microsoft Entra ID |
-| Entra License | Microsoft Entra ID Free |
-| PowerShell | PowerShell 7.6.5 |
-| Azure PowerShell | Az 16.3.0 |
-| Test Identity | Peter Parker |
-| Test Department | Engineering |
-| Authentication Baseline | Security Defaults enabled |
-| Azure Environment | AzureCloud |
+  Item                              Configuration
+  --------------------------------- ------------------------------
+  Organization                      OsCorp
+  Identity platform                 Microsoft Entra ID
+  Azure subscription                Azure subscription 1
+  Azure PowerShell module           Az 16.3.0
+  PowerShell                        PowerShell 7.6.5
+  Authentication account            `oscorp.iam.lab@outlook.com`
+  Entra tenant                      OsCorp
+  Security baseline                 Security Defaults enabled
+  Azure PowerShell authentication   Interactive/WAM
+  Legacy AzureAD module             Not used
 
----
+> **Security note:** Subscription identifiers, tenant identifiers, IP
+> addresses, request IDs, correlation IDs, session IDs, and other
+> diagnostic identifiers should be treated carefully when publishing
+> screenshots to a public repository. Crop or redact unnecessary values
+> before committing evidence to GitHub.
 
-## Security Architecture Approach
+------------------------------------------------------------------------
 
-This lab follows the **principle of least privilege**.
+# 1. Why Authentication Troubleshooting Matters
 
-Authentication troubleshooting should be performed without unnecessarily increasing administrative privileges or weakening existing security controls.
+A successful IAM implementation is not only about creating users,
+groups, and authentication policies.
 
-The following principles apply:
+A production IAM administrator must also be able to answer:
 
-- Use the minimum permissions required for the task.
-- Do not grant Global Administrator simply to resolve a permissions problem.
-- Do not disable Security Defaults to force an authentication result.
-- Do not remove authentication methods simply to generate test evidence.
-- Do not deliberately weaken authentication controls for troubleshooting.
-- Do not expose passwords, tokens, client secrets, or private keys.
-- Do not publish unnecessary personal network information.
+-   Why did authentication fail?
+-   Was the problem identity, authentication, authorization, or policy?
+-   Which security control blocked the request?
+-   Was the authentication method supported?
+-   Did the user actually authenticate?
+-   Did the user receive an Azure resource-plane authorization context?
+-   Was the remediation secure, or did it weaken the tenant?
 
----
+This lab demonstrates that troubleshooting process.
 
-# Part 1 — PowerShell Environment
+------------------------------------------------------------------------
 
-## Step 1 — Verify PowerShell Version
+# 2. Authentication Architecture
 
-PowerShell 7.6.5 was used for this lab.
+The investigation can be viewed as the following sequence:
 
-The PowerShell version was verified with:
+``` text
+User / Administrator
+        |
+        v
+Authentication Request
+        |
+        v
+Microsoft Entra ID
+        |
+        +---- Security Defaults evaluation
+        |
+        v
+Authentication Flow
+        |
+        +---- Device Code Flow
+        |          |
+        |          +---- Blocked
+        |               AADSTS530035
+        |
+        +---- Interactive/WAM
+                   |
+                   +---- Successful authentication
+                              |
+                              v
+                       Azure PowerShell
+                              |
+                              v
+                       Azure subscription
+                       resource-plane context
+```
 
-```powershell
+The important distinction is that **authentication and authorization are
+separate controls**.
+
+A user can authenticate successfully while still lacking authorization
+to perform a particular Azure resource operation.
+
+------------------------------------------------------------------------
+
+# 3. PowerShell Tooling
+
+## 3.1 PowerShell Version
+
+The lab uses PowerShell 7.6.5.
+
+The version was verified with:
+
+``` powershell
 $PSVersionTable.PSVersion
 ```
 
-The environment returned:
+The lab deliberately uses modern PowerShell rather than relying on
+legacy Windows PowerShell tooling.
 
-```text
-Major    : 7
-Minor    : 6
-Build    : 5
-Revision : 0
-```
+------------------------------------------------------------------------
 
-PowerShell 7 was used instead of Windows PowerShell 5.1 to provide the modern PowerShell environment used for the Azure lab.
+## 3.2 Az PowerShell Module
 
----
+The Azure PowerShell module was installed for the current user:
 
-## Step 2 — Check for Az PowerShell
-
-The installed Azure PowerShell modules were checked using:
-
-```powershell
-Get-Module -Name Az -ListAvailable
-```
-
-Initially, no Az module was returned.
-
-This confirmed that the modern Az PowerShell module needed to be installed.
-
----
-
-## Step 3 — Install Az PowerShell
-
-The Az PowerShell module was installed for the current Windows user:
-
-```powershell
+``` powershell
 Install-Module -Name Az -Repository PSGallery -Scope CurrentUser -Force
 ```
 
-The installation was then verified:
+The installed module was verified as:
 
-```powershell
-Get-Module -Name Az -ListAvailable
+``` text
+Az
+16.3.0
 ```
 
-The installed module was:
+The **Az PowerShell module** is used here for Azure resource-plane
+operations and Azure subscription context management.
 
-```text
-Name       : Az
-Version    : 16.3.0
-PSEdition  : Core, Desk
+> **Architecture note:** Microsoft Entra directory and sign-in
+> information should not be assumed to be exposed through Az PowerShell
+> cmdlets. This lab uses the modern Microsoft Entra admin center for
+> sign-in investigation and Az PowerShell for Azure resource-plane
+> authentication/context validation.
+
+------------------------------------------------------------------------
+
+# 4. Initial Authentication Problem
+
+The first Azure PowerShell authentication attempt encountered a local
+token-cache authentication problem:
+
+``` text
+SharedTokenCacheCredential authentication failed
 ```
 
-### Security Consideration
+A device-code authentication attempt was then tested.
 
-The module was installed using:
+The command used was:
 
-```text
--Scope CurrentUser
-```
-
-This avoids unnecessarily installing the module system-wide or elevating the PowerShell session solely for module installation.
-
----
-
-# Part 2 — Azure PowerShell Authentication
-
-## Step 4 — Initial Authentication Attempt
-
-The initial Azure authentication attempt used:
-
-```powershell
-Connect-AzAccount
-```
-
-The authentication process returned:
-
-```text
-Connect-AzAccount: SharedTokenCacheCredential authentication failed
-```
-
-### Investigation
-
-The computer running the lab is signed into Windows using a separate work account.
-
-That work identity is not the OsCorp/Oslabs Azure lab identity.
-
-The initial authentication attempt therefore encountered a cached Microsoft identity that was not appropriate for the intended lab tenant.
-
----
-
-## Step 5 — Use Device Authentication
-
-Rather than modifying the Windows work account or removing existing authentication configuration, device authentication was used:
-
-```powershell
+``` powershell
 Connect-AzAccount -UseDeviceAuthentication
 ```
 
-A Microsoft device authentication flow was presented.
+The device-code flow prompted the administrator to authenticate through
+the Microsoft device login page.
 
-The OsCorp/Oslabs lab account was then used to complete the authentication process.
+However, the authentication request was subsequently blocked by
+Microsoft Entra Security Defaults.
 
-The authentication completed successfully.
+------------------------------------------------------------------------
 
-### Security Consideration
+# 5. Device Code Authentication Failure
 
-Device authentication allowed the intended OsCorp/Oslabs identity to be explicitly selected without changing the Windows work account configured on the computer.
+## 5.1 Sign-In Event
 
-The Windows work identity and the OsCorp/Oslabs lab identity remain separate.
+The Microsoft Entra sign-in logs were investigated using the modern
+**Sign-in events** experience.
 
----
+The relevant event occurred at:
 
-# Authentication Architecture
-
-The authentication flow used in this lab can be represented as:
-
-```text
-Local Lab Computer
-       |
-       | PowerShell 7
-       |
-       v
-Azure PowerShell (Az)
-       |
-       | Connect-AzAccount
-       |
-       v
-Microsoft Entra ID
-       |
-       v
-Azure Subscription
-       |
-       v
-Azure Resource Manager
-       |
-       v
-Azure Resources
+``` text
+2026-09-08T02:00:17Z
 ```
 
-The important distinction is that **Azure PowerShell authentication establishes an Azure management context**.
+The application was:
 
-It does not mean that Az PowerShell is itself an Entra directory administration interface.
+``` text
+Microsoft Azure PowerShell
+```
 
-Azure resource management and Microsoft Entra identity administration should be treated as related but distinct management planes.
+The event showed:
 
----
+``` text
+Status: Failure
+Authentication requirement: Single-factor authentication
+Sign-in error code: 530035
+Failure reason: Access has been blocked by security defaults.
+```
 
-# Part 3 — Azure Authentication Context
+This provided direct evidence of the root cause.
 
-After successful authentication, the Azure PowerShell context should be verified using:
+### Evidence
 
-```powershell
+![Device Code authentication blocked by Security
+Defaults](./screenshots/02-device-code-blocked-by-security-defaults.png)
+
+------------------------------------------------------------------------
+
+## 5.2 Error Interpretation
+
+The error code was:
+
+``` text
+530035
+```
+
+The failure reason reported by Entra was:
+
+``` text
+Access has been blocked by security defaults.
+```
+
+This means the request was blocked by the tenant's security baseline
+rather than failing because of an incorrect password or an Azure
+subscription authorization problem.
+
+The investigation therefore identified a
+**security-policy/authentication-flow issue**.
+
+------------------------------------------------------------------------
+
+# 6. Why Authentication Details Were Not Available
+
+When the failed `02:00:17Z` event was opened, the **Basic info** view
+contained the complete failure information.
+
+The Authentication Details view did not provide a normal authentication
+event for this request.
+
+This is consistent with the observed behavior: the request was blocked
+by Security Defaults before a normal authentication event was triggered.
+
+Therefore, this lab does **not** claim that an authentication method was
+successfully evaluated for the blocked request.
+
+The evidence supports the narrower conclusion:
+
+> The Microsoft Azure PowerShell request was blocked by Security
+> Defaults and returned error `530035`.
+
+This distinction is important when documenting authentication incidents.
+
+------------------------------------------------------------------------
+
+# 7. Security Investigation
+
+The failed event established the following:
+
+  Investigation item           Observed result
+  ---------------------------- ----------------------------------------------
+  User                         `oscorp.iam.lab@outlook.com`
+  Application                  Microsoft Azure PowerShell
+  Event time                   `2026-09-08T02:00:17Z`
+  Status                       Failure
+  Authentication requirement   Single-factor authentication
+  Sign-in error code           `530035`
+  Failure reason               Access has been blocked by security defaults
+  Authentication details       No normal authentication event available
+
+The evidence indicates that the authentication request was stopped by
+the tenant security baseline.
+
+------------------------------------------------------------------------
+
+# 8. Remediation Strategy
+
+The security control was **not disabled**.
+
+Security Defaults remained enabled.
+
+Instead, the authentication method was changed to an interactive
+authentication approach supported by the environment.
+
+Azure PowerShell was configured to use **Web Account Manager (WAM)**:
+
+``` powershell
+Update-AzConfig -EnableLoginByWam $true
+```
+
+The configuration returned:
+
+``` text
+EnableLoginByWam : True
+Applies To       : Az
+Scope            : CurrentUser
+```
+
+This established WAM as the default interactive login experience for the
+current user.
+
+------------------------------------------------------------------------
+
+# 9. Successful Interactive Authentication
+
+After WAM was enabled, Azure PowerShell was connected using the OsCorp
+tenant and Azure subscription:
+
+``` powershell
+Connect-AzAccount `
+    -Tenant "<OSCORP-TENANT-ID>" `
+    -Subscription "<AZURE-SUBSCRIPTION-ID>"
+```
+
+The account selection displayed the OsCorp Azure subscription:
+
+``` text
+Azure subscription 1
+```
+
+The tenant was:
+
+``` text
+OsCorp
+```
+
+The interactive authentication completed successfully.
+
+------------------------------------------------------------------------
+
+# 10. Azure PowerShell Context Validation
+
+The authenticated context was validated with:
+
+``` powershell
 Get-AzContext
 ```
 
-The context should be reviewed for:
+The result showed:
 
-- Authenticated account
-- Subscription
-- Tenant
-- Azure environment
+``` text
+Tenant: 90115781-3bed-422c-9334-062b88e95a24
 
-The expected Azure environment is:
-
-```text
-AzureCloud
+SubscriptionName : Azure subscription 1
+SubscriptionId   : 5708da48-5936-4699-98d3-db1431fa882a
+Account          : oscorp.iam.lab@outlook.com
+Environment      : AzureCloud
+Tenant           : 90115781-3bed-422c-9334-062b88e95a24
 ```
 
-The Azure subscription context can also be reviewed using:
+The subscription was also independently validated with:
 
-```powershell
+``` powershell
 Get-AzSubscription
+```
+
+The observed state was:
+
+``` text
+Name              : Azure subscription 1
+Id                : 5708da48-5936-4699-98d3-db1431fa882a
+TenantId          : 90115781-3bed-422c-9334-062b88e95a24
+State             : Enabled
+```
+
+This proves that the successful authentication established a usable
+Azure PowerShell resource-plane context.
+
+### Evidence
+
+![Authenticated Azure PowerShell
+context](./screenshots/02-az-powershell-authenticated-context.png)
+
+------------------------------------------------------------------------
+
+# 11. Successful Entra Sign-In Event
+
+The successful Azure PowerShell sign-in was then located in Microsoft
+Entra sign-in events.
+
+The successful event occurred at:
+
+``` text
+2026-09-08T02:10:03Z
+```
+
+The event showed:
+
+``` text
+Application: Microsoft Azure PowerShell
+Status: Success
+Authentication requirement: Single-factor authentication
+```
+
+The Additional Details field reported:
+
+``` text
+MFA requirement satisfied by claim in the token
 ```
 
 ### Evidence
 
-Capture the authenticated Azure PowerShell context as:
+![Successful Azure PowerShell
+sign-in](./screenshots/03-successful-azure-powershell-sign-in.png)
 
-```text
-screenshots/01-az-authentication-context.png
+------------------------------------------------------------------------
+
+# 12. Important Interpretation of the Successful Event
+
+The successful Entra event should be interpreted carefully.
+
+The event itself does **not** prove that a brand-new MFA prompt occurred
+during that sign-in.
+
+Instead, Entra reported:
+
+``` text
+MFA requirement satisfied by claim in the token
 ```
 
-Capture the subscription context as:
+This is consistent with the earlier MFA investigation, where an existing
+authentication/token state could satisfy an MFA requirement without
+necessarily producing a new MFA challenge.
 
-```text
-screenshots/02-az-subscription-context.png
+Therefore, this lab documents the observation rather than claiming a new
+MFA challenge occurred.
+
+------------------------------------------------------------------------
+
+# 13. Failed vs Successful Authentication Comparison
+
+The investigation produced the following evidence-based comparison:
+
+  -------------------------------------------------------------------------------------
+  Investigation item      Device Code attempt            Interactive/WAM attempt
+  ----------------------- ------------------------------ ------------------------------
+  Application             Microsoft Azure PowerShell     Microsoft Azure PowerShell
+
+  User                    `oscorp.iam.lab@outlook.com`   `oscorp.iam.lab@outlook.com`
+
+  Result                  Failure                        Success
+
+  Event time              `02:00:17Z`                    `02:10:03Z`
+
+  Error code              `530035`                       None reported
+
+  Failure reason          Access blocked by Security     ---
+                          Defaults                       
+
+  Security Defaults       Request blocked                Authentication succeeded
+
+  Azure PowerShell        Not established                Established
+  context                                                
+
+  Subscription            Not reached successfully       Azure subscription 1
+
+  `Get-AzContext`         Not usable for this attempt    Valid OsCorp context
+
+  MFA information         No authentication event        MFA requirement satisfied by
+                          available                      claim in token
+  -------------------------------------------------------------------------------------
+
+This comparison demonstrates why authentication troubleshooting must
+distinguish between the **authentication mechanism** and the
+**authorization environment**.
+
+------------------------------------------------------------------------
+
+# 14. Root Cause
+
+The root cause identified in this lab was:
+
+> **The Microsoft Azure PowerShell device-code authentication request
+> was blocked by Microsoft Entra Security Defaults, producing error
+> `AADSTS530035`.**
+
+The evidence does not support attributing the failure to:
+
+-   an incorrect password
+-   a missing Azure subscription
+-   an incorrect Azure subscription ID
+-   insufficient Azure resource authorization
+-   disabling or misconfiguration of MFA
+
+The failed sign-in event explicitly identified Security Defaults as the
+blocking control.
+
+------------------------------------------------------------------------
+
+# 15. Remediation
+
+The remediation was:
+
+1.  Keep Security Defaults enabled.
+2.  Do not weaken the tenant security baseline.
+3.  Enable WAM for Azure PowerShell.
+4.  Authenticate interactively against the OsCorp tenant.
+5.  Target the intended Azure subscription.
+6.  Validate the resulting Azure context with `Get-AzContext`.
+7.  Validate the subscription with `Get-AzSubscription`.
+8.  Correlate the successful authentication with the Entra sign-in
+    event.
+
+The remediation successfully established the Azure PowerShell context.
+
+------------------------------------------------------------------------
+
+# 16. Least-Privilege Analysis
+
+The lab account currently has broad Azure subscription permissions
+because it is the subscription owner.
+
+This is useful for initial environment setup, but **Owner should not be
+treated as the default role for normal operational work**.
+
+Azure RBAC and Microsoft Entra roles are separate authorization systems.
+
+``` text
+Microsoft Entra roles
+        |
+        +---- Directory permissions
+
+Azure RBAC
+        |
+        +---- Azure resource permissions
 ```
 
-> These screenshots should only be added after the corresponding commands have been executed and the results verified.
+An Azure subscription Owner role does not automatically make the account
+a Microsoft Entra Global Administrator.
 
----
+For future labs, permissions should be reduced where practical and
+assigned at the smallest appropriate scope.
 
-# Part 4 — Microsoft Entra Sign-In Investigation
+Examples of the least-privilege approach include:
 
-## Step 6 — Open Sign-In Logs
+-   Use the minimum Azure RBAC role required for a task.
+-   Prefer resource-group or resource-level scope where appropriate.
+-   Avoid Owner when Contributor or a narrower role is sufficient.
+-   Use a read-only Entra role when only sign-in investigation is
+    required.
+-   Do not grant Global Administrator merely to simplify a lab.
+-   Separate administration from day-to-day user identities where
+    possible.
 
-The modern Microsoft Entra admin center is used to investigate authentication activity.
+------------------------------------------------------------------------
 
-Navigate to:
+# 17. Security Risks to Avoid
 
-```text
-Microsoft Entra admin center
-    |
-    v
-Entra ID
-    |
-    v
-Monitoring & health
-    |
-    v
-Sign-in logs
+## 17.1 Do Not Disable Security Defaults
+
+The correct response to a blocked authentication flow is not
+automatically to disable the security control.
+
+Security Defaults provide baseline protection for the tenant.
+
+In this investigation, the security control correctly prevented the
+attempted authentication flow.
+
+------------------------------------------------------------------------
+
+## 17.2 Do Not Grant Global Administrator
+
+Global Administrator is unnecessary for this authentication
+troubleshooting exercise.
+
+Granting it would violate least-privilege principles and would make the
+lab less representative of a secure production environment.
+
+------------------------------------------------------------------------
+
+## 17.3 Do Not Change the Subscription Directory
+
+The Azure subscription is associated with the OsCorp Entra tenant.
+
+Changing the subscription's directory would be an unnecessary and
+potentially disruptive remediation.
+
+------------------------------------------------------------------------
+
+## 17.4 Do Not Publish Authentication Codes
+
+Device authentication codes are temporary authentication secrets.
+
+They should never be committed to GitHub.
+
+Screenshots containing authentication codes should be deleted, cropped,
+or redacted before publication.
+
+------------------------------------------------------------------------
+
+## 17.5 Protect Diagnostic Information
+
+Public screenshots should avoid exposing unnecessary:
+
+-   IP addresses
+-   Request IDs
+-   Correlation IDs
+-   Session IDs
+-   User IDs
+-   Tenant IDs
+-   Subscription IDs
+-   Tokens
+-   Passwords
+-   Secrets
+
+Diagnostic information can be useful during an investigation but does
+not necessarily need to be publicly exposed.
+
+------------------------------------------------------------------------
+
+## 17.6 Do Not Use Legacy AzureAD
+
+This lab deliberately uses:
+
+-   Microsoft Entra admin center
+-   Az PowerShell
+-   Modern authentication
+
+The legacy **AzureAD PowerShell module is not used**.
+
+------------------------------------------------------------------------
+
+# 18. Evidence Collected
+
+The following evidence was captured during the investigation:
+
+  ---------------------------------------------------------------------------------------
+  Evidence                                            Purpose
+  --------------------------------------------------- -----------------------------------
+  `02-device-code-blocked-by-security-defaults.png`   Shows the failed Microsoft Azure
+                                                      PowerShell sign-in and `530035`
+                                                      Security Defaults block
+
+  `02-az-powershell-authenticated-context.png`        Shows the successfully established
+                                                      Azure PowerShell context
+
+  `03-successful-azure-powershell-sign-in.png`        Shows the successful Microsoft
+                                                      Azure PowerShell Entra sign-in
+  ---------------------------------------------------------------------------------------
+
+The evidence is intentionally based on **actual observed results**,
+rather than expected or simulated results.
+
+------------------------------------------------------------------------
+
+# 19. Investigation Timeline
+
+``` text
+Initial Azure PowerShell authentication
+        |
+        v
+SharedTokenCacheCredential authentication failed
+        |
+        v
+Device Code authentication attempted
+        |
+        v
+Microsoft Entra sign-in event
+2026-09-08T02:00:17Z
+        |
+        v
+AADSTS530035
+        |
+        v
+Access blocked by Security Defaults
+        |
+        v
+Security control investigated
+        |
+        v
+Security Defaults NOT disabled
+        |
+        v
+WAM enabled
+        |
+        v
+Interactive Azure PowerShell authentication
+        |
+        v
+Successful Entra sign-in
+2026-09-08T02:10:03Z
+        |
+        v
+Get-AzContext
+        |
+        v
+OsCorp tenant + Azure subscription validated
 ```
 
-Select the interactive user sign-in logs.
+------------------------------------------------------------------------
 
----
+# 20. Key IAM Lessons
 
-## Step 7 — Filter for Peter Parker
+### Lesson 1 --- Authentication failures need evidence
 
-The sign-in logs are filtered for the OsCorp identity:
+Do not immediately change configuration because a login failed.
 
-```text
-Peter Parker
+First determine:
+
+``` text
+Who?
+What application?
+When?
+What authentication method?
+What error?
+What policy?
+What resource?
 ```
 
-The existing authentication activity contains successful and interrupted interactive sign-in events.
+------------------------------------------------------------------------
 
-No artificial authentication failure is required for this investigation.
+### Lesson 2 --- Security controls can be the reason authentication fails
 
-Using existing authentication activity allows the troubleshooting exercise to be performed without deliberately weakening or disrupting the authentication configuration.
+A failed authentication does not necessarily mean the credentials are
+wrong.
 
----
+In this lab, Entra explicitly identified Security Defaults as the
+blocking control.
 
-# Part 5 — Authentication Details Investigation
+------------------------------------------------------------------------
 
-## Step 8 — Investigate a Successful Sign-In
+### Lesson 3 --- Do not weaken security to solve a tooling problem
 
-A successful Peter Parker sign-in event is selected.
+The device-code flow was blocked.
 
-The following information is reviewed:
+The correct response was to use a supported authentication approach
+rather than disable Security Defaults.
 
-- User
-- Date and time
-- Application
-- Resource
-- Sign-in status
-- Authentication details
-- Authentication method
-- Authentication requirement
-- Result detail
+------------------------------------------------------------------------
 
----
+### Lesson 4 --- Authentication and authorization are different
 
-## Step 9 — Investigate Authentication Method
+The successful Azure PowerShell login established authentication and an
+Azure subscription context.
 
-The authentication details for the investigated event showed:
+That does not mean the account automatically has permission to perform
+every possible Entra or Azure operation.
 
-```text
-Authentication method:
-Previously satisfied
+------------------------------------------------------------------------
+
+### Lesson 5 --- Token state matters
+
+The successful sign-in event reported:
+
+``` text
+MFA requirement satisfied by claim in the token
 ```
 
-The authentication was successful.
+Therefore, the absence of a new MFA prompt should not automatically be
+interpreted as MFA being broken or bypassed.
 
-The full result detail was:
+------------------------------------------------------------------------
 
-```text
-First factor requirement satisfied by claim in token
-```
+### Lesson 6 --- Troubleshooting should preserve security posture
 
-### Interpretation
+A good remediation should solve the operational problem **without
+reducing the tenant's security baseline**.
 
-The authentication requirement did not require Peter Parker to repeat the first authentication factor during this sign-in.
+------------------------------------------------------------------------
 
-The existing authentication token contained a claim indicating that the first-factor requirement had already been satisfied.
+# 21. Lab Outcome
 
-This explains why a subsequent authentication attempt did not necessarily display a new authentication prompt.
+This lab successfully demonstrated an evidence-based authentication
+troubleshooting workflow.
 
-### Important Security Interpretation
+The investigation established that:
 
-The absence of a new authentication prompt should not automatically be interpreted as an authentication or MFA failure.
+-   Azure PowerShell was initially unable to use the local shared token
+    cache.
+-   Device Code authentication was attempted.
+-   Microsoft Entra blocked the device-code request with `AADSTS530035`.
+-   The Entra sign-in event explicitly identified Security Defaults as
+    the blocking control.
+-   Security Defaults were not disabled.
+-   WAM was enabled for Az PowerShell.
+-   Interactive Azure PowerShell authentication succeeded.
+-   `Get-AzContext` confirmed the OsCorp tenant and Azure subscription.
+-   `Get-AzSubscription` confirmed the subscription was enabled.
+-   The successful Entra event showed the MFA requirement was satisfied
+    by a claim in the token.
+-   The investigation distinguished authentication, security policy, and
+    Azure authorization concerns.
 
-Authentication requirements can be satisfied through information contained in an existing authentication token.
+The main architectural lesson is:
 
-Authentication troubleshooting should therefore examine the sign-in event and authentication details before concluding that an authentication control has failed.
+> **Troubleshoot the authentication flow before changing authorization
+> or weakening security controls.**
 
----
+------------------------------------------------------------------------
 
-# Troubleshooting Finding
+# 22. Related Documentation
 
-During MFA testing, a subsequent authentication attempt did not display a new MFA prompt.
+-   [Day 02 --- Authentication](../README.md)
+-   [Lab 01 --- Authentication
+    Fundamentals](../01-authentication-fundamentals/README.md)
+-   [Lab 02 --- Multifactor Authentication](../02-mfa/README.md)
+-   [Day 01 --- IAM
+    Fundamentals](../../Day-01-IAM-Fundamentals/README.md)
+-   [OsCorp Environment Setup](../../00-Environment-Setup/README.md)
 
-Rather than assuming that MFA was malfunctioning, the corresponding sign-in event was investigated.
+------------------------------------------------------------------------
 
-The event showed:
+# 23. Next Lab
 
-```text
-Authentication method:
-Previously satisfied
-```
+The next stage of the IAM journey will build on the authentication
+foundation established in Day 02 and move into deeper identity and
+access control scenarios.
 
-The full result detail was:
+The focus will remain on:
 
-```text
-First factor requirement satisfied by claim in token
-```
-
-The sign-in itself succeeded.
-
-### Finding
-
-The available evidence indicates that the authentication requirement was already satisfied through information contained in the existing authentication token.
-
-This demonstrates why the absence of a new authentication prompt does not necessarily indicate that authentication or MFA is broken.
-
----
-
-# Evidence
-
-## Screenshot 01 — Azure PowerShell Authentication Context
-
-```text
-screenshots/01-az-authentication-context.png
-```
-
-Shows the authenticated Azure PowerShell context after connecting to the OsCorp/Oslabs Azure environment.
-
----
-
-## Screenshot 02 — Azure Subscription Context
-
-```text
-screenshots/02-az-subscription-context.png
-```
-
-Shows the Azure subscription context available to the authenticated lab identity.
-
----
-
-## Screenshot 03 — Authentication Details Investigation
-
-```text
-screenshots/03-authentication-details-investigation.png
-```
-
-Shows authentication details for a successful Peter Parker sign-in.
-
-Key evidence includes:
-
-- Authentication method: Previously satisfied
-- Authentication succeeded
-- First factor requirement satisfied by claim in token
-
----
-
-# Security Risks to Avoid
-
-## 1. Do Not Disable Security Defaults
-
-Security Defaults should not be disabled simply to force an MFA prompt or create a particular troubleshooting result.
-
-The existing security baseline should remain enabled during the lab.
-
----
-
-## 2. Do Not Grant Excessive Privileges
-
-Do not assign:
-
-```text
-Global Administrator
-```
-
-or:
-
-```text
-Owner
-```
-
-simply because an operation requires additional permissions.
-
-Identify the required permission and use the least-privileged role capable of performing the task.
-
----
-
-## 3. Do Not Delete Authentication Methods
-
-Do not remove Peter Parker's registered Microsoft Authenticator method merely to generate a different MFA test result.
-
-The existing authentication configuration provides legitimate evidence for the lab.
-
----
-
-## 4. Do Not Expose Credentials
-
-Never commit the following to GitHub:
-
-- Passwords
-- Access tokens
-- Refresh tokens
-- Client secrets
-- Private keys
-- Session cookies
-
----
-
-## 5. Protect Network Information
-
-Sign-in logs may contain network and location information.
-
-Before publishing screenshots publicly:
-
-- Crop personal public IP addresses where appropriate.
-- Remove unnecessary personal device information.
-- Remove unrelated work-account information.
-- Retain fictional OsCorp identity information needed to demonstrate the lab.
-
----
-
-# Lessons Learned
-
-1. PowerShell 7 provides the modern PowerShell environment used for Azure administration.
-
-2. The Az PowerShell module provides the modern Azure management experience used in this lab.
-
-3. Az PowerShell should be used instead of the deprecated AzureAD PowerShell module.
-
-4. Installing modules with `-Scope CurrentUser` can avoid unnecessary administrative elevation.
-
-5. A Windows work account does not need to be the identity used for Azure administration.
-
-6. Device authentication can be used when cached Microsoft authentication causes the default Az authentication flow to select the wrong identity.
-
-7. Azure PowerShell authentication establishes an Azure management context.
-
-8. Microsoft Entra sign-in logs provide valuable evidence for authentication troubleshooting.
-
-9. Authentication details provide additional information beyond the basic sign-in status.
-
-10. A missing authentication prompt does not automatically indicate that authentication or MFA is broken.
-
-11. Authentication requirements can be satisfied through claims contained in an existing authentication token.
-
-12. Authentication troubleshooting should be evidence-driven rather than assumption-driven.
-
----
-
-# Lab Outcome
-
-This lab establishes the foundation for investigating Azure and Microsoft Entra authentication behaviour.
-
-The completed work demonstrates the ability to:
-
-- Use PowerShell 7 for Azure administration.
-- Install and verify the modern Az PowerShell module.
-- Authenticate to an Azure lab environment.
-- Resolve an authentication issue caused by cached identity selection.
-- Use device authentication to explicitly authenticate the intended lab identity.
-- Understand the Azure PowerShell authentication context.
-- Investigate Microsoft Entra sign-in activity.
-- Interpret authentication details.
-- Understand token-based satisfaction of authentication requirements.
-- Apply least-privilege principles during authentication troubleshooting.
-- Preserve existing security controls while investigating authentication behaviour.
-
----
-
-# Related Documentation
-
-- [Day 02 — Authentication](../README.md)
-- [Lab 01 — Authentication Fundamentals](../01-authentication-fundamentals/README.md)
-- [Lab 02 — Multifactor Authentication](../02-mfa/README.md)
-- [Day 01 — IAM Fundamentals](../../Day-01-IAM-Fundamentals/README.md)
-- [OsCorp Environment Setup](../../00-Environment-Setup/README.md)
+-   Evidence-based implementation
+-   Least privilege
+-   Modern Microsoft Entra administration
+-   Azure RBAC
+-   Authentication and authorization boundaries
+-   Security-focused troubleshooting
+-   Reproducible lab documentation
