@@ -1,0 +1,418 @@
+# Lab 04 — Azure RBAC Troubleshooting
+
+## Objective
+
+Investigate a scenario where authentication succeeds but Azure authorization does not provide the required access.
+
+This lab demonstrates an evidence-based troubleshooting workflow:
+
+```text
+Authentication
+      ↓
+Success
+      ↓
+Resource access attempted
+      ↓
+Authorization evaluation
+      ↓
+Access problem
+      ↓
+Role assignment investigation
+      ↓
+Scope / inheritance / group investigation
+      ↓
+Root cause
+      ↓
+Least-privilege remediation
+      ↓
+Validation
+```
+
+---
+
+## Learning Objectives
+
+By the end of this lab, I will be able to:
+
+- Distinguish authentication failure from authorization failure.
+- Investigate Azure RBAC assignments.
+- Investigate scope and inheritance.
+- Investigate group-based access.
+- Identify missing or excessive permissions.
+- Use Azure Activity Log during authorization investigations.
+- Apply a least-privilege remediation.
+- Validate the final result.
+
+---
+
+## 1. Troubleshooting Scenario
+
+The lab will use an actual OsCorp identity and Azure resource scenario.
+
+Do not invent the failure.
+
+Complete the scenario details after the access test has been performed.
+
+| Item | Observed value |
+|---|---|
+| User | **Pending** |
+| Application/resource | **Pending** |
+| Authentication result | **Pending** |
+| Authorization result | **Pending** |
+| Expected access | **Pending** |
+| Actual access | **Pending** |
+| Error message | **Pending** |
+| Time of event | **Pending** |
+
+---
+
+## 2. Authentication Check
+
+First establish whether authentication succeeded.
+
+Check the Microsoft Entra sign-in logs.
+
+Record:
+
+- User
+- Application
+- Time
+- Result
+- Authentication information
+
+Do not troubleshoot RBAC until authentication has been established as successful.
+
+---
+
+## 3. Azure Context Check
+
+In PowerShell:
+
+```powershell
+Get-AzContext
+```
+
+Confirm:
+
+- Correct account
+- Correct tenant
+- Correct subscription
+- AzureCloud environment
+
+If the context is wrong, correct the context before continuing.
+
+---
+
+## 4. Role Assignment Investigation
+
+List assignments for the affected identity:
+
+```powershell
+Get-AzRoleAssignment -SignInName "<USER-UPN>"
+```
+
+Inspect assignments at the relevant scope:
+
+```powershell
+Get-AzRoleAssignment -Scope "<SCOPE>"
+```
+
+Review role definitions:
+
+```powershell
+Get-AzRoleDefinition -Name "<ROLE>"
+```
+
+Record the actual results.
+
+---
+
+## 5. Investigate Access Paths
+
+A user may receive access through:
+
+```text
+Direct user assignment
+        +
+Group assignment
+        +
+Inherited assignment
+        +
+Higher-scope assignment
+```
+
+Investigate each applicable path.
+
+Do not conclude that a user has no access simply because there is no direct assignment.
+
+---
+
+## 6. Scope Investigation
+
+Determine whether the role is assigned at:
+
+```text
+Management Group
+Subscription
+Resource Group
+Resource
+```
+
+Then determine whether the scope includes the target resource.
+
+Document the actual scope.
+
+---
+
+## 7. Group Investigation
+
+If access is provided through a group:
+
+1. Identify the group.
+2. Confirm the user's membership.
+3. Identify the group's Azure RBAC role.
+4. Identify the assignment scope.
+5. Determine whether the group assignment explains the effective access.
+
+Use the modern Microsoft Entra admin center for directory/group investigation.
+
+---
+
+## 8. Activity Log Investigation
+
+Use the Azure Activity Log to investigate relevant management-plane changes.
+
+Questions:
+
+```text
+Who changed the access?
+What changed?
+When?
+At what scope?
+What role was involved?
+```
+
+Record only events actually observed.
+
+---
+
+## 9. Root-Cause Analysis
+
+Complete this table:
+
+| Investigation area | Finding |
+|---|---|
+| Authentication | **Pending** |
+| Subscription context | **Pending** |
+| Direct role assignment | **Pending** |
+| Group assignment | **Pending** |
+| Inherited assignment | **Pending** |
+| Role definition | **Pending** |
+| Scope | **Pending** |
+| Activity Log | **Pending** |
+| Root cause | **Pending** |
+
+---
+
+## 10. Remediation
+
+Only after the root cause is established:
+
+1. Determine the minimum permission required.
+2. Select the appropriate role.
+3. Select the smallest practical scope.
+4. Apply the change.
+5. Re-test access.
+6. Capture evidence.
+7. Remove unnecessary temporary access.
+
+Do not solve an authorization problem by granting Owner unless the task genuinely requires Owner-level permissions.
+
+---
+
+## 11. Evidence
+
+### Screenshot 01 — Successful authentication
+
+**Filename:**
+
+```text
+01-authentication-success.png
+```
+
+```markdown
+![Successful authentication](./screenshots/01-authentication-success.png)
+```
+
+### Screenshot 02 — Authorization failure
+
+**Filename:**
+
+```text
+02-authorization-failure.png
+```
+
+```markdown
+![Authorization failure](./screenshots/02-authorization-failure.png)
+```
+
+### Screenshot 03 — RBAC investigation
+
+**Filename:**
+
+```text
+03-rbac-investigation.png
+```
+
+```markdown
+![RBAC investigation](./screenshots/03-rbac-investigation.png)
+```
+
+### Screenshot 04 — Activity Log
+
+**Filename:**
+
+```text
+04-rbac-activity-log.png
+```
+
+```markdown
+![RBAC activity log](./screenshots/04-rbac-activity-log.png)
+```
+
+### Screenshot 05 — Remediated access
+
+**Filename:**
+
+```text
+05-rbac-remediated-access.png
+```
+
+```markdown
+![Remediated Azure access](./screenshots/05-rbac-remediated-access.png)
+```
+
+---
+
+## 12. Evidence Log
+
+| Evidence | Status | Actual observation |
+|---|---|---|
+| Successful authentication | ⬜ Pending | |
+| Authorization failure | ⬜ Pending | |
+| RBAC investigation | ⬜ Pending | |
+| Activity Log | ⬜ Pending | |
+| Remediated access | ⬜ Pending | |
+
+---
+
+## 13. Security Risks
+
+### Do not confuse authentication with authorization
+
+A successful sign-in does not mean the user has access to every Azure resource.
+
+### Do not over-permission
+
+Do not grant broad access simply to make the error disappear.
+
+### Do not ignore inheritance
+
+Higher-scope assignments may already provide access.
+
+### Do not ignore groups
+
+A group can provide Azure RBAC access even when the user has no direct assignment.
+
+### Do not modify security controls unnecessarily
+
+Troubleshoot the authorization path before changing tenant-wide security settings.
+
+### Do not publish sensitive diagnostics
+
+Sanitize IP addresses, session identifiers, request IDs, correlation IDs and other unnecessary diagnostic information before public publication.
+
+---
+
+## 14. Troubleshooting Decision Tree
+
+```text
+Did authentication succeed?
+        |
+   +----+----+
+   |         |
+  No        Yes
+   |         |
+Fix auth     v
+         Is target resource correct?
+                |
+           +----+----+
+           |         |
+          No        Yes
+           |         |
+      Correct      v
+              Is role assigned?
+                    |
+               +----+----+
+               |         |
+              No        Yes
+               |         |
+          Determine     v
+          least role   Is scope correct?
+                            |
+                       +----+----+
+                       |         |
+                      No        Yes
+                       |         |
+                 Correct scope   v
+                           Check inheritance,
+                           group membership,
+                           role actions and
+                           Activity Log
+```
+
+---
+
+## 15. Lessons Learned
+
+**What failed?**
+
+- 
+
+**Did authentication succeed?**
+
+- 
+
+**What caused the authorization problem?**
+
+- 
+
+**What role and scope fixed it?**
+
+- 
+
+**Could the remediation be made narrower?**
+
+- 
+
+**What would I monitor in production?**
+
+- 
+
+---
+
+## 16. Outcome
+
+**Status:** ⬜ Not yet completed
+
+The lab is complete when the authorization issue has been reproduced or observed, investigated, remediated with least privilege, and validated with actual evidence.
+
+---
+
+## Related Documentation
+
+- [Day 03 — Authorization & Azure RBAC](../README.md)
+- [Lab 01 — Authorization Fundamentals](../01-authorization-fundamentals/README.md)
+- [Lab 02 — RBAC Role Assignments](../02-rbac-role-assignments/README.md)
+- [Lab 03 — Least-Privilege Access](../03-least-privilege/README.md)
+- [Day 02 — Authentication](../Day-02-Authentication/README.md)
