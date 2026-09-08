@@ -1,0 +1,286 @@
+# Lab 03 — Least-Privilege Access
+
+## Objective
+
+Demonstrate how Azure RBAC access should be designed around the **minimum required permissions and minimum practical scope**.
+
+The lab will compare a broad authorization model with a narrower model and document the security reasoning behind the final design.
+
+---
+
+## Learning Objectives
+
+By the end of this lab, I will be able to:
+
+- Explain least privilege in Azure RBAC.
+- Identify excessive permissions.
+- Select a narrower role where appropriate.
+- Reduce scope where practical.
+- Validate that required access remains available.
+- Identify the security impact of excessive privileges.
+- Document an authorization decision.
+
+---
+
+## 1. Least-Privilege Model
+
+Use this decision process:
+
+```text
+Required business/technical task
+            ↓
+Required Azure actions
+            ↓
+Candidate role
+            ↓
+Smallest practical scope
+            ↓
+Role assignment
+            ↓
+Access validation
+            ↓
+Periodic review
+            ↓
+Removal when no longer required
+```
+
+The objective is not simply to reduce the role name.
+
+The objective is to reduce the **actual permissions and blast radius** while retaining required functionality.
+
+---
+
+## 2. Privilege Assessment
+
+Complete this table from the actual scenario:
+
+| Item | Current state | Required state |
+|---|---|---|
+| Principal | **Pending** | **Pending** |
+| Current role | **Pending** | **Pending** |
+| Current scope | **Pending** | **Pending** |
+| Required actions | **Pending** | **Pending** |
+| Proposed role | **Pending** | **Pending** |
+| Proposed scope | **Pending** | **Pending** |
+| Security justification | **Pending** | **Pending** |
+
+---
+
+## 3. Candidate Roles
+
+| Role | General use | Security consideration |
+|---|---|---|
+| Reader | View resources | Low change capability |
+| Contributor | Manage resources | Cannot manage RBAC access |
+| Owner | Full resource management and access management | High privilege |
+
+These are candidates, not automatic recommendations.
+
+The actual role must be selected based on the task.
+
+---
+
+## 4. Scope Reduction
+
+Consider:
+
+```text
+Subscription
+    ↓
+Resource Group
+    ↓
+Resource
+```
+
+If the task only requires access to one resource group, subscription-wide access should not be necessary.
+
+If the task only requires one resource, resource-level scope may be preferable.
+
+Document why the selected scope is sufficient.
+
+---
+
+## 5. Practical Exercise
+
+1. Identify an existing or planned access scenario.
+2. Determine what action the identity needs to perform.
+3. Identify the current role and scope, if one exists.
+4. Determine whether the permission is excessive.
+5. Select a narrower role if appropriate.
+6. Select a narrower scope if appropriate.
+7. Apply the change.
+8. Validate the required task.
+9. Confirm that unnecessary privilege has been removed.
+10. Capture evidence.
+
+Do not claim success until the access has actually been tested.
+
+---
+
+## 6. PowerShell Investigation
+
+Inspect the current role assignments:
+
+```powershell
+Get-AzRoleAssignment -SignInName "<USER-UPN>"
+```
+
+Inspect the proposed role:
+
+```powershell
+Get-AzRoleDefinition -Name "<ROLE>"
+```
+
+Inspect assignments at a specific scope:
+
+```powershell
+Get-AzRoleAssignment -Scope "<SCOPE>"
+```
+
+Record the actual output.
+
+---
+
+## 7. Evidence
+
+### Screenshot 01 — Existing privilege
+
+**Filename:**
+
+```text
+01-existing-privilege.png
+```
+
+```markdown
+![Existing Azure privilege](./screenshots/01-existing-privilege.png)
+```
+
+### Screenshot 02 — Least-privilege design
+
+**Filename:**
+
+```text
+02-least-privilege-design.png
+```
+
+```markdown
+![Least-privilege design](./screenshots/02-least-privilege-design.png)
+```
+
+### Screenshot 03 — Reduced privilege
+
+**Filename:**
+
+```text
+03-reduced-privilege.png
+```
+
+```markdown
+![Reduced Azure privilege](./screenshots/03-reduced-privilege.png)
+```
+
+### Screenshot 04 — Validation
+
+**Filename:**
+
+```text
+04-least-privilege-validation.png
+```
+
+```markdown
+![Least-privilege validation](./screenshots/04-least-privilege-validation.png)
+```
+
+---
+
+## 8. Evidence Log
+
+| Evidence | Status | Actual observation |
+|---|---|---|
+| Existing privilege | ⬜ Pending | |
+| Least-privilege design | ⬜ Pending | |
+| Reduced privilege | ⬜ Pending | |
+| Validation | ⬜ Pending | |
+
+---
+
+## 9. Security Risks
+
+Avoid:
+
+- Owner for convenience
+- Subscription-wide permissions when narrower scope is sufficient
+- Permanent access for temporary work
+- Unreviewed group-based privilege
+- Privilege escalation as a troubleshooting shortcut
+- Leaving test permissions behind
+- Assuming a narrower role automatically provides every required action
+
+---
+
+## 10. Blast Radius Analysis
+
+For the final design, document:
+
+| Dimension | Assessment |
+|---|---|
+| Number of users affected | **Pending** |
+| Number of resources affected | **Pending** |
+| Role privilege | **Pending** |
+| Scope | **Pending** |
+| Group inheritance | **Pending** |
+| Temporary or persistent | **Pending** |
+| Review requirement | **Pending** |
+
+---
+
+## 11. Validation Questions
+
+After the change:
+
+1. Can the identity still perform the required task?
+2. Can the identity perform unnecessary administrative actions?
+3. Is the role assignment at the smallest practical scope?
+4. Is access inherited through another assignment?
+5. Is access coming from group membership?
+6. Was the previous excessive assignment removed?
+7. Does the resulting design reduce the blast radius?
+
+Document only observed results.
+
+---
+
+## 12. Lessons Learned
+
+**What privilege was excessive?**
+
+- 
+
+**What was changed?**
+
+- 
+
+**Why is the new design safer?**
+
+- 
+
+**What limitation did the narrower role introduce, if any?**
+
+- 
+
+---
+
+## 13. Outcome
+
+**Status:** ⬜ Not yet completed
+
+The lab is complete when the final access model has been implemented and evidence demonstrates that required access remains available with reduced privilege.
+
+---
+
+## Related Documentation
+
+- [Day 03 — Authorization & Azure RBAC](../README.md)
+- [Lab 01 — Authorization Fundamentals](../01-authorization-fundamentals/README.md)
+- [Lab 02 — RBAC Role Assignments](../02-rbac-role-assignments/README.md)
+- [Lab 04 — RBAC Troubleshooting](../04-rbac-troubleshooting/README.md)
