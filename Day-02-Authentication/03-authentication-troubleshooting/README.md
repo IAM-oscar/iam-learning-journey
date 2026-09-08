@@ -407,8 +407,7 @@ MFA requirement satisfied by claim in the token
 
 ### Evidence
 
-![Successful Azure PowerShell
-sign-in](./screenshots/03-az-powershell-authenticated-context.png)
+![Successful Azure PowerShell sign-in](./screenshots/03-az-powershell-authenticated-context.png)
 
 ------------------------------------------------------------------------
 
