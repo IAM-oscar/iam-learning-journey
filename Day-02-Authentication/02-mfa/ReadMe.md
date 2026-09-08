@@ -333,9 +333,10 @@ Purpose: Demonstrate the authentication details recorded by Microsoft Entra for 
 
 Screenshot 06 — MFA Troubleshooting Evidence
 
-Filename: 06-mfa-troubleshooting.png
+The sign-in investigation shows that the authentication method was recorded as **Previously satisfied** and the sign-in succeeded. The result detail was **First factor requirement satisfied by claim in token**, demonstrating that an existing authentication token can satisfy an authentication requirement without requiring the user to repeat the authentication step.
 
-Purpose: Demonstrate the investigation and validation of an MFA authentication issue.
+Filename: 06-mfa-troubleshooting.png
+![MFA Authentication Details](./screenshots/06-mfa-troubleshooting.png)
 
 ## 18. Lessons Learned
 
