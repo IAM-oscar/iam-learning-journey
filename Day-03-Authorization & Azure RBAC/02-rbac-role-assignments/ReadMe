@@ -1,0 +1,284 @@
+# Lab 02 — Azure RBAC Role Assignments
+
+## Objective
+
+Create, inspect and validate an Azure RBAC role assignment using a least-privilege approach.
+
+The lab demonstrates:
+
+```text
+Principal
+   ↓
+Role
+   ↓
+Scope
+   ↓
+Role Assignment
+   ↓
+Validated Access
+```
+
+No role assignment should be created until the required task, role and scope have been identified.
+
+---
+
+## Learning Objectives
+
+By the end of this lab, I will be able to:
+
+- Identify an appropriate Azure RBAC role.
+- Identify the smallest practical scope.
+- Assign an Azure RBAC role.
+- Inspect role assignments.
+- Validate the resulting assignment.
+- Understand direct vs inherited access.
+- Remove an assignment when it is no longer required.
+
+---
+
+## Environment
+
+| Item | Value |
+|---|---|
+| Organization | OsCorp |
+| Subscription | Azure subscription 1 |
+| Identity platform | Microsoft Entra ID |
+| Azure PowerShell | Az 16.3.0 |
+| Legacy AzureAD module | Not used |
+
+---
+
+## 1. Authorization Design Before Implementation
+
+Before making a change, document:
+
+| Question | Decision |
+|---|---|
+| Principal | **Pending** |
+| Required task | **Pending** |
+| Required actions | **Pending** |
+| Candidate role | **Pending** |
+| Scope | **Pending** |
+| Why this role? | **Pending** |
+| Why this scope? | **Pending** |
+| Approval / lab justification | **Pending** |
+
+Do not fill these fields with assumptions. Complete them from the actual lab scenario.
+
+---
+
+## 2. Portal Procedure
+
+1. Open the Azure portal.
+2. Navigate to the target subscription or resource group.
+3. Open **Access control (IAM)**.
+4. Select **Add** → **Add role assignment**.
+5. Select the role determined during the design step.
+6. Select the appropriate member.
+7. Select the smallest practical scope.
+8. Review the assignment.
+9. Apply the assignment only after validating the design.
+
+Capture the actual result.
+
+---
+
+## 3. Az PowerShell
+
+Inspect current assignments:
+
+```powershell
+Get-AzRoleAssignment
+```
+
+Filter for a principal:
+
+```powershell
+Get-AzRoleAssignment -SignInName "<USER-UPN>"
+```
+
+Inspect role definitions:
+
+```powershell
+Get-AzRoleDefinition -Name "Reader"
+```
+
+A role assignment can be created with Az PowerShell after the principal, role and scope have been confirmed.
+
+Example pattern:
+
+```powershell
+New-AzRoleAssignment `
+    -SignInName "<USER-UPN>" `
+    -RoleDefinitionName "<ROLE>" `
+    -Scope "<SCOPE>"
+```
+
+Use the actual values selected during the lab.
+
+---
+
+## 4. Validation
+
+After creating an assignment:
+
+```powershell
+Get-AzRoleAssignment -SignInName "<USER-UPN>"
+```
+
+Confirm:
+
+- Correct principal
+- Correct role
+- Correct scope
+- Assignment exists
+- No unnecessary broader assignment was introduced
+
+---
+
+## 5. Evidence
+
+### Screenshot 01 — Role assignment configuration
+
+**Filename:**
+
+```text
+01-role-assignment-configuration.png
+```
+
+```markdown
+![Role assignment configuration](./screenshots/01-role-assignment-configuration.png)
+```
+
+### Screenshot 02 — Role assignment result
+
+**Filename:**
+
+```text
+02-role-assignment-result.png
+```
+
+```markdown
+![Role assignment result](./screenshots/02-role-assignment-result.png)
+```
+
+### Screenshot 03 — PowerShell validation
+
+**Filename:**
+
+```text
+03-role-assignment-powershell-validation.png
+```
+
+```markdown
+![Role assignment PowerShell validation](./screenshots/03-role-assignment-powershell-validation.png)
+```
+
+---
+
+## 6. Evidence Log
+
+| Evidence | Status | Actual observation |
+|---|---|---|
+| Role assignment configuration | ⬜ Pending | |
+| Role assignment result | ⬜ Pending | |
+| PowerShell validation | ⬜ Pending | |
+
+---
+
+## 7. Security Risks
+
+### Excessive role
+
+Do not choose Owner simply because it guarantees access.
+
+### Excessive scope
+
+Do not assign subscription-level access when resource-group or resource scope is sufficient.
+
+### Group privilege concentration
+
+A group with a powerful role can create a large blast radius.
+
+### Persistent access
+
+Remove temporary access when the task is complete.
+
+### Unverified changes
+
+Never assume an RBAC assignment worked. Validate it.
+
+---
+
+## 8. Troubleshooting
+
+If the role assignment cannot be created:
+
+1. Confirm the current Azure subscription.
+2. Confirm the principal.
+3. Confirm the role definition exists.
+4. Confirm the account has permission to create role assignments.
+5. Check the requested scope.
+6. Record the actual error.
+
+Do not immediately escalate privileges to solve the problem.
+
+---
+
+## 9. Removal / Cleanup
+
+If the assignment is temporary, remove it after validation.
+
+Example:
+
+```powershell
+Remove-AzRoleAssignment `
+    -SignInName "<USER-UPN>" `
+    -RoleDefinitionName "<ROLE>" `
+    -Scope "<SCOPE>"
+```
+
+Validate that the assignment is gone:
+
+```powershell
+Get-AzRoleAssignment -SignInName "<USER-UPN>"
+```
+
+Record the actual result.
+
+---
+
+## 10. Lessons Learned
+
+**What role was selected and why?**
+
+- 
+
+**What scope was selected and why?**
+
+- 
+
+**Was the access broader than necessary?**
+
+- 
+
+**What did validation prove?**
+
+- 
+
+---
+
+## 11. Outcome
+
+**Status:** ⬜ Not yet completed
+
+The lab is complete when the role assignment has been implemented, validated, documented and cleaned up where appropriate.
+
+---
+
+## Related Documentation
+
+- [Day 03 — Authorization & Azure RBAC](../README.md)
+- [Lab 01 — Authorization Fundamentals](../01-authorization-fundamentals/README.md)
+- [Lab 03 — Least-Privilege Access](../03-least-privilege/README.md)
+- [Lab 04 — RBAC Troubleshooting](../04-rbac-troubleshooting/README.md)
