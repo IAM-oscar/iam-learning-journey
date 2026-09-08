@@ -210,7 +210,7 @@ This provided direct evidence of the root cause.
 ### Evidence
 
 ![Device Code authentication blocked by Security
-Defaults](./screenshots/02-device-code-blocked-by-security-defaults.png)
+Defaults](./screenshots/01-device-code-authentication-failure.png)
 
 ------------------------------------------------------------------------
 
@@ -376,7 +376,7 @@ Azure PowerShell resource-plane context.
 ### Evidence
 
 ![Authenticated Azure PowerShell
-context](./screenshots/02-az-powershell-authenticated-context.png)
+context](./screenshots/02-device-code-sign-in-investigation.png)
 
 ------------------------------------------------------------------------
 
@@ -408,7 +408,7 @@ MFA requirement satisfied by claim in the token
 ### Evidence
 
 ![Successful Azure PowerShell
-sign-in](./screenshots/03-successful-azure-powershell-sign-in.png)
+sign-in](./screenshots/03-az-powershell-authenticated-context.png)
 
 ------------------------------------------------------------------------
 
